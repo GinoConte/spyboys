@@ -14,32 +14,43 @@ class Header extends Component {
     super(props);
     this.state = {
       tokenField: '',
+      submitted: false,
     };
 
     this.handleCreateRoom = this.handleCreateRoom.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleTokenChange = this.handleTokenChange.bind(this);
   }
   handleCreateRoom(e) {
     this.props.onCreateRoomClicked();
   }
   handleTokenChange(e) {
     this.setState({tokenfield: e.target.value});
+    //console.log(this.state.tokenfield);
+  }
+  handleSubmit(e) {
+    e.preventDefault();
+    this.setState({tokenfield: '', submitted: true});
+    this.props.onTokenSubmit(this.state.tokenfield);
   }
   render() {
-    var navBarButtons = (
-      <div>
-        <FlatButton label="Submit"/>
-        <FlatButton label="Login"/>
-      </div>
-    );
     var titleTextEntry = (
       <div style={style.tokenfield}><center>
-      <TextField
-        hintText="Enter a room token"
-        hintStyle={style.tokenhintstyle}
-        underlineFocusStyle={style.tokenfieldunderline}
-        inputStyle={style.tokenhintstyle}
-      />
+      {(!this.state.submitted) ?
+      (<form onSubmit={this.handleSubmit}>
+        <TextField
+          hintText="enter a room id"
+          hintStyle={style.tokenhintstyle}
+          underlineFocusStyle={style.tokenfieldunderline}
+          inputStyle={style.tokenhintstyle}
+          onChange={this.handleTokenChange}
+          value={this.state.tokenfield}
+        />
+      <FlatButton type="Submit" label="Submit" style={style.tokenhintstyle} />
+      </form>) : null }
+
       </center></div>
+
     );
 
 

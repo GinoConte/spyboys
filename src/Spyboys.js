@@ -1,3 +1,5 @@
+//component that holds all the game components
+
 import React, { Component } from 'react';
 import axios from 'axios';
 import style from './style';
@@ -23,6 +25,7 @@ class Spyboys extends Component {
     this.fetchCardsFromServer = this.fetchCardsFromServer.bind(this);
     this.generateSpyBoard = this.generateSpyBoard.bind(this);
     this.handleCreateRoomClicked = this.handleCreateRoomClicked.bind(this);
+    this.handleTokenSubmit = this.handleTokenSubmit.bind(this);
   }
   fetchCardsFromServer() {
     //this.setState({isFetchingCards: true});
@@ -104,6 +107,10 @@ class Spyboys extends Component {
         this.setState({roomId : res.roomid});
       })
   }
+  handleTokenSubmit(token) {
+    this.setState({roomid:token});
+    console.log(token);
+  }
   componentDidMount() {
     this.fetchCardsFromServer();
   }
@@ -117,15 +124,20 @@ class Spyboys extends Component {
     } else {
       return (
         <div style={style.spyboys}>
-          <Header onCreateRoomClicked={this.handleCreateRoomClicked}/>
-          <center><div style={style.clueboyholder}>
-            <ClueBoy team={'blue'}/>
-            <ClueBoy team={'red'}/>
-          </div></center>
-          <center>
-          <CardGrid
-            cards={this.state.cards}/>
-        </center>
+          <Header
+            onCreateRoomClicked={this.handleCreateRoomClicked}
+            onTokenSubmit={this.handleTokenSubmit}
+            roomid={this.state.roomid}
+            />
+          {(this.state.roomid) ?
+            (<center><div style={style.clueboyholder}>
+              <ClueBoy team={'blue'}/>
+              <ClueBoy team={'red'}/>
+            </div>
+            <CardGrid
+              cards={this.state.cards}/>
+          </center>)
+          : null }
         </div>
       );
     }

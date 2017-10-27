@@ -29,9 +29,6 @@ class ClueBoy extends Component {
     return (
       <MuiThemeProvider>
         <WhatDoYaThink style={{...style.clueboy}}>
-          <CardMedia>
-            <img src={imgf} alt="" />
-          </CardMedia>
           <CardTitle title={'JABRONI'}/>
         </WhatDoYaThink>
       </MuiThemeProvider>
