@@ -38,14 +38,15 @@ class Spyboys extends Component {
     //       var testcopy = Object.assign({}, testcard);
     //       testcopy.gridorder = i;
     //       testarray.push(testcopy);
-    //     }
+    //     }]
     //     this.setState({ cards: testarray, isFetchingCards: false },
     //       function() {
     //         this.generateSpyBoard();
     //       });
     //   })
     if (this.state.roomid) {
-      console.log("hi room id " + this.state.roomid);
+      //console.log("hi room id " + this.state.roomid);
+      this.setState({isFetchingCards: true });
       axios.get('http://localhost:3001/api/room/' + this.state.roomid + '/fetchcards')
         .then(res => {
           console.log(res.data);

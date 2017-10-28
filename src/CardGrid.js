@@ -13,8 +13,9 @@ class CardGrid extends Component {
         <Card
           word={card.word}
           theme={card.theme}
-          type={card.type}
-          key={card.gridorder}>
+          colour={card.colour}
+          key={card._id}
+          state={card.state}>
           {card.text}
         </Card>
       )

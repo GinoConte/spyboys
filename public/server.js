@@ -114,7 +114,7 @@ router.route('/room')
         possibleCardTypes.push("blue")
       }
       var selectedCardType = possibleCardTypes[Math.floor(Math.random()*possibleCardTypes.length)];
-      //console.log("Selected: ", selectedCardType);
+      console.log("Selected: ", selectedCardType);
 
       //reduce count of selected type
       if (selectedCardType === 'red')

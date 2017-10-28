@@ -19,12 +19,14 @@ class Card extends Component {
     super(props);
     this.state = {
       votes: 0,
-      state: "None", //states: None, Suspected, SpyViewRed, SpyViewBlue, SpyViewGreen, SpyViewBlack
+      state: this.props.state, //states: None, Suspected, SpyViewRed, SpyViewBlue, SpyViewGreen, SpyViewBlack
       highlighted: false,
     };
 
     this.handleVoteClick = this.handleVoteClick.bind(this);
     this.handleHighlight = this.handleHighlight.bind(this);
+    this.handleLockIn = this.handleLockIn.bind(this);
+
   }
   handleVoteClick(e) {
     e.preventDefault();
@@ -40,8 +42,10 @@ class Card extends Component {
       }
     }
   }
-  handleLockIn(e) {
-    e.preventDefault();
+  handleLockIn() {
+    //e.preventDefault();
+    console.log("fdgijhifosghsfh");
+    this.setState({state: "revealed"})
     //reveal & reset highlights
   }
   handleHighlight(e) {
@@ -50,13 +54,21 @@ class Card extends Component {
     this.setState({highlighted: !this.state.highlighted})
   }
   render() {
-    var cardColour = '#ffa09b';
-    if (this.props.type === 'blue')
-      cardColour = '#b5f1ff';
-    if (this.props.type === 'black')
-      cardColour = '#bfbfbf';
-    if (this.props.type === 'green')
-      cardColour = '#c9ffba';
+
+    if (this.state.state === "none") {
+      var cardColour = '#FFF59D';
+
+
+    } else {
+      var cardColour = '#ffa09b';
+      if (this.props.colour === 'blue')
+        cardColour = '#b5f1ff';
+      if (this.props.colour === 'black')
+        cardColour = '#bfbfbf';
+      if (this.props.colour === 'green')
+        cardColour = '#c9ffba';
+    }
+
 
 
 
@@ -74,7 +86,7 @@ class Card extends Component {
         <WhatDoYaThink style={{...style.card}} zDepth={1}>
           <CardTitle title={this.props.word} subtitle={this.props.theme} style={pigstyle}/>
           <FlatButton label="Highlight" onClick={this.handleHighlight} style={textStyle}/>
-          <FlatButton label="Lock In"/>
+          <FlatButton label="Lock In" onClick={this.handleLockIn}/>
         </WhatDoYaThink>
       </MuiThemeProvider>
     );
