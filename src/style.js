@@ -22,12 +22,17 @@ const style = {
   },
   clueboy: {
     width: '300px',
+    height: '95px',
     //backgroundColor: '#855',
     display: 'inline-block',
     marginLeft: '20px',
     marginRight: '20px',
     marginTop: '20px',
     marginBottom: '20px',
+  },
+  clueboyrow: {
+    display: 'inline-block',
+    //backgroundColor: '#555'
   },
   cardbuttonrow: {
     display: 'inline-block',

@@ -71,7 +71,7 @@ class Card extends Component {
 
     return (
       <MuiThemeProvider>
-        <WhatDoYaThink style={{...style.card}}>
+        <WhatDoYaThink style={{...style.card}} zDepth={1}>
           <CardTitle title={this.props.word} subtitle={this.props.theme} style={pigstyle}/>
           <FlatButton label="Highlight" onClick={this.handleHighlight} style={textStyle}/>
           <FlatButton label="Lock In"/>

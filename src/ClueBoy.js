@@ -4,6 +4,7 @@ import style from './style';
 //material ui components
 import {Card as WhatDoYaThink, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import FontIcon from 'material-ui/FontIcon';
 
 import imgf from './assets/unknown.jpg';
 
@@ -26,10 +27,37 @@ class ClueBoy extends Component {
     var pigstyle = {
       backgroundColor: teamColour,
     }
+
+    const iconStyles = {
+      margin: 15,
+      fontSize: 40,
+      //backgroundColor: '#444'
+    };
+
+    var leftSide;
+    if (this.props.team === 'red') {
+      leftSide = (
+        <FontIcon className="material-icons" style={iconStyles}>stars</FontIcon>
+      )
+    }
+
+    var rightSide;
+    if (this.props.team === 'blue') {
+      rightSide = (
+        <FontIcon className="material-icons" style={iconStyles}>stars</FontIcon>
+      )
+    }
+
     return (
       <MuiThemeProvider>
+
         <WhatDoYaThink style={{...style.clueboy}}>
-          <CardTitle title={'JABRONI'}/>
+
+            {leftSide}
+            <CardTitle title={'\"JABRONI\"'} subtitle={this.props.team + ' clueboy'} style={style.clueboyrow}/>
+            {rightSide}
+
+
         </WhatDoYaThink>
       </MuiThemeProvider>
     );

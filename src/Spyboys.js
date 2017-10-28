@@ -133,6 +133,7 @@ class Spyboys extends Component {
             (<center><div style={style.clueboyholder}>
               <ClueBoy team={'blue'}/>
               <ClueBoy team={'red'}/>
+
             </div>
             <CardGrid
               cards={this.state.cards}/>
