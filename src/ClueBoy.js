@@ -34,19 +34,14 @@ class ClueBoy extends Component {
       //backgroundColor: '#444'
     };
 
-    var leftSide;
-    if (this.props.team === 'red') {
-      leftSide = (
+    var leftSide = (
         <FontIcon className="material-icons" style={iconStyles}>stars</FontIcon>
-      )
-    }
+    );
 
-    var rightSide;
-    if (this.props.team === 'blue') {
-      rightSide = (
+
+    var rightSide = (
         <FontIcon className="material-icons" style={iconStyles}>stars</FontIcon>
-      )
-    }
+    );
 
     return (
       <MuiThemeProvider>

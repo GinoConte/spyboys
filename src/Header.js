@@ -47,7 +47,7 @@ class Header extends Component {
           value={this.state.tokenfield}
         />
       <FlatButton type="Submit" label="Submit" style={style.tokenhintstyle} />
-      </form>) : null }
+      </form>) : (<span>Joined room: {this.props.roomid}</span>) }
 
       </center></div>
 

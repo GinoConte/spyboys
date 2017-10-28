@@ -19,30 +19,49 @@ class Spyboys extends Component {
       isFetchingCards: true,
       isGeneratingSpyBoard: true,
       startingTeam: 'red',
-      roomId: '',
+      roomid: '',
     };
 
     this.fetchCardsFromServer = this.fetchCardsFromServer.bind(this);
     this.generateSpyBoard = this.generateSpyBoard.bind(this);
     this.handleCreateRoomClicked = this.handleCreateRoomClicked.bind(this);
     this.handleTokenSubmit = this.handleTokenSubmit.bind(this);
+    this.fetchFirstTurnTeam = this.fetchFirstTurnTeam.bind(this);
   }
   fetchCardsFromServer() {
     //this.setState({isFetchingCards: true});
-    axios.get(this.props.url)
-      .then(res => {
-        let testcard = res.data[0];
-        let testarray = [];
-        for (var i = 0; i < 25; i++) {
-          var testcopy = Object.assign({}, testcard);
-          testcopy.gridorder = i;
-          testarray.push(testcopy);
-        }
-        this.setState({ cards: testarray, isFetchingCards: false },
-          function() {
-            this.generateSpyBoard();
-          });
-      })
+    // axios.get(this.props.url)
+    //   .then(res => {
+    //     let testcard = res.data[0];
+    //     let testarray = [];
+    //     for (var i = 0; i < 25; i++) {
+    //       var testcopy = Object.assign({}, testcard);
+    //       testcopy.gridorder = i;
+    //       testarray.push(testcopy);
+    //     }
+    //     this.setState({ cards: testarray, isFetchingCards: false },
+    //       function() {
+    //         this.generateSpyBoard();
+    //       });
+    //   })
+    if (this.state.roomid) {
+      console.log("hi room id " + this.state.roomid);
+      axios.get('http://localhost:3001/api/room/' + this.state.roomid + '/fetchcards')
+        .then(res => {
+          console.log(res.data);
+          this.setState({ cards: res.data, isFetchingCards: true },
+            function() {
+              //console.log(this.state.cards);
+              this.setState({isFetchingCards : false});
+              //this.generateSpyBoard();
+            });
+        })
+    } else {
+      this.setState({isFetchingCards: false });
+    }
+  }
+  fetchFirstTurnTeam() {
+    console.log("CARDS", this.state.cards);
   }
   generateSpyBoard() {
     if (this.state.cards) {
@@ -104,15 +123,21 @@ class Spyboys extends Component {
   handleCreateRoomClicked() {
     axios.post('http://localhost:3001/api/room')
       .then(res => {
-        this.setState({roomId : res.roomid});
+        this.setState({roomid : res.roomid});
       })
   }
   handleTokenSubmit(token) {
-    this.setState({roomid:token});
+    //this.setState({roomid:token});
+    this.setState({roomid:token},
+          function() {
+            this.fetchCardsFromServer();
+          });
+
     console.log(token);
   }
   componentDidMount() {
     this.fetchCardsFromServer();
+    //setInterval(this.fetchCardsFromServer(), 1000);
   }
   render() {
     if (this.state.isFetchingCards) {

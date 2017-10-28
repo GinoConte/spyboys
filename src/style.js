@@ -63,6 +63,9 @@ const style = {
   tokenhintstyle: {
     color: 'white',
   },
+  navbar: {
+    //backgroundColor: '#43A047',
+  },
   tokenfieldunderline: {
     borderColor: 'white',
   },

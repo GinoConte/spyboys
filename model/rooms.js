@@ -10,6 +10,7 @@ var RoomsSchema = new Schema({
   _id : Schema.Types.ObjectId,
   redScore: Number,
   blueScore: Number,
+  teamTurn: String,
 
 });
 
