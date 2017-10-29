@@ -21,7 +21,7 @@ const style = {
     width: '1200px',
   },
   clueboy: {
-    width: '300px',
+    width: '350px',
     height: '95px',
     //backgroundColor: '#855',
     display: 'inline-block',
@@ -33,6 +33,10 @@ const style = {
   clueboyrow: {
     display: 'inline-block',
     //backgroundColor: '#555'
+  },
+  clueboyinfo: {
+    display: 'inline-block',
+    marginTop: '-5px',
   },
   cardbuttonrow: {
     display: 'inline-block',

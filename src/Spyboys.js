@@ -20,6 +20,7 @@ class Spyboys extends Component {
       isGeneratingSpyBoard: true,
       startingTeam: 'red',
       roomid: '',
+      teamTurn: 'red',
     };
 
     this.fetchCardsFromServer = this.fetchCardsFromServer.bind(this);
@@ -27,6 +28,7 @@ class Spyboys extends Component {
     this.handleCreateRoomClicked = this.handleCreateRoomClicked.bind(this);
     this.handleTokenSubmit = this.handleTokenSubmit.bind(this);
     this.fetchFirstTurnTeam = this.fetchFirstTurnTeam.bind(this);
+    this.advanceBoard = this.advanceBoard.bind(this);
   }
   fetchCardsFromServer() {
     //this.setState({isFetchingCards: true});
@@ -62,7 +64,35 @@ class Spyboys extends Component {
     }
   }
   fetchFirstTurnTeam() {
-    console.log("CARDS", this.state.cards);
+    //console.log("CARDS", this.state.cards);
+  }
+  advanceBoard(cardid, roomid, cardcolour) {
+    //update card and change state to revealed
+    let body = {
+      state : 'revealed',
+    }
+
+    axios.put('http://localhost:3001/api/cards/'+ cardid, body)
+      .catch(err => {
+        console.log(err);
+    });
+
+    let nextTeamTurn = 'blue';
+    if (this.state.teamTurn === 'blue') {
+      nextTeamTurn = 'red';
+    }
+    this.setState({teamTurn: nextTeamTurn});
+
+    body = {
+      teamTurn: nextTeamTurn,
+    }
+
+    axios.put('http://localhost:3001/api/room/'+ roomid, body)
+      .catch(err => {
+        console.log(err);
+    });
+
+
   }
   generateSpyBoard() {
     if (this.state.cards) {
@@ -157,12 +187,12 @@ class Spyboys extends Component {
             />
           {(this.state.roomid) ?
             (<center><div style={style.clueboyholder}>
-              <ClueBoy team={'blue'}/>
-              <ClueBoy team={'red'}/>
+              <ClueBoy team={'blue'} teamTurn={this.state.teamTurn}/>
+              <ClueBoy team={'red'} teamTurn={this.state.teamTurn}/>
 
             </div>
             <CardGrid
-              cards={this.state.cards}/>
+              cards={this.state.cards} advanceBoard={this.advanceBoard}/>
           </center>)
           : null }
         </div>

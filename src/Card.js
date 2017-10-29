@@ -45,8 +45,12 @@ class Card extends Component {
   handleLockIn() {
     //e.preventDefault();
     console.log("fdgijhifosghsfh");
-    this.setState({state: "revealed"})
     //reveal & reset highlights
+    this.setState({state: "revealed"})
+
+    //advance the turn
+    this.props.advanceBoard(this.props.id, this.props.parentRoom, this.props.colour);
+
   }
   handleHighlight(e) {
     e.preventDefault();
@@ -55,10 +59,9 @@ class Card extends Component {
   }
   render() {
 
+    //assign colour based on state
     if (this.state.state === "none") {
       var cardColour = '#FFF59D';
-
-
     } else {
       var cardColour = '#ffa09b';
       if (this.props.colour === 'blue')
@@ -68,25 +71,29 @@ class Card extends Component {
       if (this.props.colour === 'green')
         cardColour = '#c9ffba';
     }
-
-
-
-
     var pigstyle = {backgroundColor: cardColour,
                     margin: '5px',};
 
-    if (this.state.highlighted) {
-      pigstyle.outline = "2px solid black";
+    //assign styling based on highlight
+    var depth = 1;
+    if (this.state.highlighted && !(this.state.state === 'revealed')) {
+      //pigstyle.outline = "2px solid black";
+      depth = 3;
+      pigstyle.backgroundColor = '#ffec47';
     }
     var textStyle = {color: '#666'};
 
+    //disable lock in button based on revealed
+    if (this.state.state === "revealed") {
+      var isRevealed = true;
+    }
 
     return (
       <MuiThemeProvider>
-        <WhatDoYaThink style={{...style.card}} zDepth={1}>
+        <WhatDoYaThink style={{...style.card}} zDepth={depth}>
           <CardTitle title={this.props.word} subtitle={this.props.theme} style={pigstyle}/>
-          <FlatButton label="Highlight" onClick={this.handleHighlight} style={textStyle}/>
-          <FlatButton label="Lock In" onClick={this.handleLockIn}/>
+          <FlatButton label="Highlight" onClick={this.handleHighlight} disabled={isRevealed}/>
+          <FlatButton label="Lock In" onClick={this.handleLockIn} primary={true} disabled={isRevealed}/>
         </WhatDoYaThink>
       </MuiThemeProvider>
     );

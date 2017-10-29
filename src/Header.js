@@ -31,7 +31,9 @@ class Header extends Component {
   handleSubmit(e) {
     e.preventDefault();
     this.setState({tokenfield: '', submitted: true});
-    this.props.onTokenSubmit(this.state.tokenfield);
+    //this.props.onTokenSubmit(this.state.tokenfield);
+    this.props.onTokenSubmit('59f47eeee765da3935bbf599');
+
   }
   render() {
     var titleTextEntry = (

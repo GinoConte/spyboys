@@ -14,7 +14,7 @@ var CardsSchema = new Schema({
   word: String,
   theme: String,
   colour: String, //red blue black green
-  state: String, //highlighted
+  state: String, //highlighted none revealed
 });
 
 //export our module to use in server.js

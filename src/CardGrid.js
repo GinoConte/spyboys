@@ -11,10 +11,13 @@ class CardGrid extends Component {
     let CardComponents = this.props.cards.map(card => {
       return (
         <Card
+          id={card._id}
+          parentRoom={card._parentRoom}
           word={card.word}
           theme={card.theme}
           colour={card.colour}
           key={card._id}
+          advanceBoard={this.props.advanceBoard} 
           state={card.state}>
           {card.text}
         </Card>
