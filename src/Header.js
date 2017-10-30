@@ -32,7 +32,7 @@ class Header extends Component {
     e.preventDefault();
     this.setState({tokenfield: '', submitted: true});
     //this.props.onTokenSubmit(this.state.tokenfield);
-    this.props.onTokenSubmit('59f678353a0a6a3ff94cf1ce');
+    this.props.onTokenSubmit('59f6bb34151943535121c313');
 
   }
   render() {

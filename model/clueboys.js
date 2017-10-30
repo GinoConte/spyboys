@@ -11,6 +11,7 @@ var Schema = mongoose.Schema;
 var ClueboysSchema = new Schema({
   _id : Schema.Types.ObjectId,
   _parentRoom: Schema.Types.ObjectId,
+  team: String,
   currentClue: String,
   pastClues: [String],
 });

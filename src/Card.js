@@ -6,8 +6,6 @@ import CardVotes from './CardVotes';
 //   CardTitle, CardSubtitle, Button as ButtonRS } from 'reactstrap';
 // import unknownImg from './assets/unknown.jpg';
 
-
-
 //material ui components
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -75,7 +73,7 @@ class Card extends Component {
     //assign styling based on whether or not card is highlighted
     var depth = 1;
     if (this.state.highlighted && !(this.state.state === 'revealed')) {
-      depth = 3;
+      depth = 4;
       pigstyle.background = "repeating-linear-gradient(45deg,#FFF59D,#FFF59D 10px,#fffad3 10px,#fffad3 20px)";
     } else {
       pigstyle.background = cardColour;
@@ -85,7 +83,6 @@ class Card extends Component {
     //disable lock in button based on revealed
     if (this.state.state === "revealed") {
       var isRevealed = true;
-
     }
 
     return (
@@ -101,20 +98,3 @@ class Card extends Component {
 }
 
 export default Card;
-
-//<CardImg top width="100%" src={unknownImg} alt="Card image cap" />
-
-// <div style={style.card}>
-//   <ThatsBone className="text-center" color="info" body inverse>
-//     <CardImg top width="100%" src={unknownImg} alt="Card image cap" />
-//     <CardBody>
-//       <CardTitle><b>{this.props.word}</b></CardTitle>
-//       <CardSubtitle><i>{this.props.theme}</i></CardSubtitle>
-//       <center><CardVotes votes={this.state.votes}/></center>
-//       <div style={style.cardbuttonrow}>
-//         <ButtonRS style={style.cardbutton}>Suspect</ButtonRS>
-//         <ButtonRS style={style.cardbutton} onClick={this.handleVoteClick}>Vote</ButtonRS>
-//       </div>
-//     </CardBody>
-//   </ThatsBone>
-// </div>

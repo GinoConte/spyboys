@@ -12,7 +12,6 @@ import Popover from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 
-
 import imgf from './assets/unknown.jpg';
 
 
@@ -100,7 +99,7 @@ class ClueBoy extends Component {
         <WhatDoYaThink style={{...style.clueboy}} zDepth={3}>
 
             {(this.props.team === 'red') ? (leftSide) : (rightSide)}
-            <CardTitle title={'\"JABRONI\"'} subtitle={this.props.team + ' clueboy'} style={style.clueboyrow}/>
+            <CardTitle title={'"' + this.props.currentClue + '"'} subtitle={this.props.team + ' clueboy'} style={style.clueboyrow}/>
             {(this.props.team === 'red') ? (rightSide) : (leftSide)}
 
 

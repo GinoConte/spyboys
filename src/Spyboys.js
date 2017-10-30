@@ -24,6 +24,8 @@ class Spyboys extends Component {
       startingTeam: 'red',
       roomid: '',
       teamTurn: '',
+      redboy: {},
+      blueboy: {},
     };
 
     this.fetchCardsFromServer = this.fetchCardsFromServer.bind(this);
@@ -32,23 +34,9 @@ class Spyboys extends Component {
     this.handleTokenSubmit = this.handleTokenSubmit.bind(this);
     this.advanceBoard = this.advanceBoard.bind(this);
     this.fetchWhosTurn = this.fetchWhosTurn.bind(this);
+    this.fetchClueboysFromServer = this.fetchClueboysFromServer.bind(this);
   }
   fetchCardsFromServer() {
-    //this.setState({isFetchingCards: true});
-    // axios.get(this.props.url)
-    //   .then(res => {
-    //     let testcard = res.data[0];
-    //     let testarray = [];
-    //     for (var i = 0; i < 25; i++) {
-    //       var testcopy = Object.assign({}, testcard);
-    //       testcopy.gridorder = i;
-    //       testarray.push(testcopy);
-    //     }]
-    //     this.setState({ cards: testarray, isFetchingCards: false },
-    //       function() {
-    //         this.generateSpyBoard();
-    //       });
-    //   })
     if (this.state.roomid) {
       //console.log("hi room id " + this.state.roomid);
       this.setState({isFetchingCards: true });
@@ -74,6 +62,26 @@ class Spyboys extends Component {
         })
     }
   }
+  fetchClueboysFromServer() {
+    this.setState({isFetchingCards: true });    
+    if (this.state.roomid) {
+      axios.get('http://localhost:3001/api/room/' + this.state.roomid + '/fetchclueboys')
+        .then(res => {
+          this.setState({clueboys: res.data, isFetchingCards: true},
+            function() {
+              let redboy = this.state.clueboys[0];
+              let blueboy = this.state.clueboys[1];
+              if (this.state.clueboys[0].team === 'blue') {
+                redboy = this.state.clueboys[1];
+                blueboy = this.state.clueboys[0];
+              }
+
+              //console.log("REDBOY", redboy);
+              this.setState({isFetchingCards: false});
+            });
+        })
+    }
+  }
   advanceBoard(cardid, roomid, cardcolour) {
     //(1)update card and change state to revealed
     let body = {
@@ -81,7 +89,8 @@ class Spyboys extends Component {
     }
     //(2)check if revealed card is an assassin
     //(3)handle other card types, decrement score counter
-
+    //(4)add current clue to list of past clues
+    
     axios.put('http://localhost:3001/api/cards/'+ cardid, body)
       .catch(err => {
         console.log(err);
@@ -182,6 +191,7 @@ class Spyboys extends Component {
           function() {
             this.fetchCardsFromServer();
             this.fetchWhosTurn();
+            this.fetchClueboysFromServer();
           });
 
     console.log(token);
@@ -213,8 +223,18 @@ class Spyboys extends Component {
             />
           {(this.state.roomid) ?
             (<center><div style={style.clueboyholder}>
-              <ClueBoy team={'blue'} teamTurn={this.state.teamTurn}/>
-              <ClueBoy team={'red'} teamTurn={this.state.teamTurn}/>
+              <ClueBoy 
+                team={'blue'} 
+                teamTurn={this.state.teamTurn} 
+                currentClue={this.state.blueboy.currentClue}
+                pastClues={this.state.blueboy.pastclues}
+              />
+              <ClueBoy 
+                team={'red'} 
+                teamTurn={this.state.teamTurn} 
+                currentClue={this.state.redboy.currentClue}
+                pastClues={this.state.redboy.pastclues}
+              />
 
             </div>
             <CardGrid
