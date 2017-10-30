@@ -32,10 +32,11 @@ class Header extends Component {
     e.preventDefault();
     this.setState({tokenfield: '', submitted: true});
     //this.props.onTokenSubmit(this.state.tokenfield);
-    this.props.onTokenSubmit('59f47eeee765da3935bbf599');
+    this.props.onTokenSubmit('59f678353a0a6a3ff94cf1ce');
 
   }
   render() {
+    //determine title text based on whether or not a token has been submitted
     var titleTextEntry = (
       <div style={style.tokenfield}><center>
       {(!this.state.submitted) ?

@@ -11,10 +11,8 @@ var Schema = mongoose.Schema;
 var ClueboysSchema = new Schema({
   _id : Schema.Types.ObjectId,
   _parentRoom: Schema.Types.ObjectId,
-  word: String,
-  theme: String,
-  colour: String, //red blue black green
-  state: String, //highlighted none revealed
+  currentClue: String,
+  pastClues: [String],
 });
 
 //export our module to use in server.js

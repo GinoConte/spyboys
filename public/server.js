@@ -24,6 +24,25 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+function generate25WordArray(theme) { //returns
+  let possibleWords = ['Rick', 'Morty', 'Time', 'Dimension', 'Portal', 'Plumbus', 'Neutrino', 'Meeseeks',
+                       'Robot', 'Ants', 'Vindicator', 'Beth', 'Jerry', 'Summer', 'Birdperson', 'Citadel',
+                       'C-137', 'Schmeckle', 'Ship', 'Space', 'Pickle', 'Tiny', 'Schwifty', 'Poopy', 'Flurbo',
+                       'Gwendolyn', 'Smidgen', 'Shrink', 'Ray', 'Genuis', 'Quinton', 'Horse'];
+  let wordList = [];
+  while (wordList.length < 25) {
+    var selectedWord = possibleWords[Math.floor(Math.random()*possibleWords.length)];
+    if (wordList.indexOf(selectedWord) > -1) {
+      continue;
+    } else {
+      wordList.push(selectedWord);
+    }
+    //console.log("WORDS", wordList);
+  }
+  return wordList;
+}
+
+
 app.use(function(req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -107,16 +126,22 @@ router.route('/room')
     let blackLeft = 1;
     let greenLeft = 25 - redLeft - blueLeft - blackLeft;
 
+    var words = generate25WordArray("Nothin yet");
+
     for (let i = 0; i < 25 ; i++) {
       //create cards
       let currCard = new Card({
                 _id: new mongoose.Types.ObjectId(),
         _parentRoom: room._id,
-               word: "Bepsi",
-              theme: "It'll quench ya",
+      //         word: "Bepsi",
+              theme: "Rock and Morto",
               state: "none",
       });
-      console.log (currCard);
+
+      currCard.word = words[i];
+
+
+      //console.log (currCard);
 
       //pick a colour for the card
       let possibleCardTypes = [];
@@ -131,7 +156,7 @@ router.route('/room')
         possibleCardTypes.push("blue")
       }
       var selectedCardType = possibleCardTypes[Math.floor(Math.random()*possibleCardTypes.length)];
-      console.log("Selected: ", selectedCardType);
+      //console.log("Selected: ", selectedCardType);
 
       //reduce count of selected type
       if (selectedCardType === 'red')

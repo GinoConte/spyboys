@@ -49,7 +49,6 @@ const style = {
   },
   spyboys: {
     backgroundColor: '#EFEFEF',
-    background
   },
 
   votes: {

@@ -11,7 +11,6 @@ var RoomsSchema = new Schema({
   redScore: Number,
   blueScore: Number,
   teamTurn: String,
-
 });
 
 //export our module to use in server.js

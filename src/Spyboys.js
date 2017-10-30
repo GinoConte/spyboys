@@ -23,15 +23,15 @@ class Spyboys extends Component {
       isGeneratingSpyBoard: true,
       startingTeam: 'red',
       roomid: '',
-      teamTurn: 'red',
+      teamTurn: '',
     };
 
     this.fetchCardsFromServer = this.fetchCardsFromServer.bind(this);
     this.generateSpyBoard = this.generateSpyBoard.bind(this);
     this.handleCreateRoomClicked = this.handleCreateRoomClicked.bind(this);
     this.handleTokenSubmit = this.handleTokenSubmit.bind(this);
-    this.fetchFirstTurnTeam = this.fetchFirstTurnTeam.bind(this);
     this.advanceBoard = this.advanceBoard.bind(this);
+    this.fetchWhosTurn = this.fetchWhosTurn.bind(this);
   }
   fetchCardsFromServer() {
     //this.setState({isFetchingCards: true});
@@ -54,7 +54,6 @@ class Spyboys extends Component {
       this.setState({isFetchingCards: true });
       axios.get('http://localhost:3001/api/room/' + this.state.roomid + '/fetchcards')
         .then(res => {
-          console.log(res.data);
           this.setState({ cards: res.data, isFetchingCards: true },
             function() {
               //console.log(this.state.cards);
@@ -66,8 +65,14 @@ class Spyboys extends Component {
       this.setState({isFetchingCards: false });
     }
   }
-  fetchFirstTurnTeam() {
+  fetchWhosTurn() {
     //console.log("CARDS", this.state.cards);
+    if (this.state.roomid) {
+      axios.get('http://localhost:3001/api/room/' + this.state.roomid)
+        .then(res => {
+          this.setState({teamTurn: res.data.teamTurn});
+        })
+    }
   }
   advanceBoard(cardid, roomid, cardcolour) {
     //(1)update card and change state to revealed
@@ -176,6 +181,7 @@ class Spyboys extends Component {
     this.setState({roomid:token},
           function() {
             this.fetchCardsFromServer();
+            this.fetchWhosTurn();
           });
 
     console.log(token);

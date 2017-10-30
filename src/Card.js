@@ -43,8 +43,6 @@ class Card extends Component {
     }
   }
   handleLockIn() {
-    //e.preventDefault();
-    console.log("fdgijhifosghsfh");
     //reveal & reset highlights
     this.setState({state: "revealed"})
 
@@ -87,12 +85,13 @@ class Card extends Component {
     //disable lock in button based on revealed
     if (this.state.state === "revealed") {
       var isRevealed = true;
+
     }
 
     return (
       <MuiThemeProvider>
         <WhatDoYaThink style={{...style.card}} zDepth={depth}>
-          <CardTitle title={this.props.word} subtitle={this.props.theme} style={pigstyle}/>
+          <CardTitle title={isRevealed ? ( <span> &nbsp;</span>) : this.props.word} subtitle={isRevealed ? (<span> &nbsp;</span>) : this.props.theme} style={pigstyle}/>
           <FlatButton label="Highlight" onClick={this.handleHighlight} disabled={isRevealed}/>
           <FlatButton label="Lock In" onClick={this.handleLockIn} primary={true} disabled={isRevealed}/>
         </WhatDoYaThink>
