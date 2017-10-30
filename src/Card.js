@@ -74,12 +74,13 @@ class Card extends Component {
     var pigstyle = {backgroundColor: cardColour,
                     margin: '5px',};
 
-    //assign styling based on highlight
+    //assign styling based on whether or not card is highlighted
     var depth = 1;
     if (this.state.highlighted && !(this.state.state === 'revealed')) {
-      //pigstyle.outline = "2px solid black";
       depth = 3;
-      pigstyle.backgroundColor = '#ffec47';
+      pigstyle.background = "repeating-linear-gradient(45deg,#FFF59D,#FFF59D 10px,#fffad3 10px,#fffad3 20px)";
+    } else {
+      pigstyle.background = cardColour;
     }
     var textStyle = {color: '#666'};
 

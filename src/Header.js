@@ -14,7 +14,7 @@ class Header extends Component {
     super(props);
     this.state = {
       tokenField: '',
-      submitted: false,
+      submitted: !(this.props.roomid === ''),
     };
 
     this.handleCreateRoom = this.handleCreateRoom.bind(this);

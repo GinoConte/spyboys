@@ -11,6 +11,9 @@ import Header from './Header';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import LinearProgress from 'material-ui/LinearProgress';
 
+//import img
+import woodImg from './assets/wood.jpg';
+
 class Spyboys extends Component {
   constructor(props) {
     super(props);
@@ -67,10 +70,12 @@ class Spyboys extends Component {
     //console.log("CARDS", this.state.cards);
   }
   advanceBoard(cardid, roomid, cardcolour) {
-    //update card and change state to revealed
+    //(1)update card and change state to revealed
     let body = {
       state : 'revealed',
     }
+    //(2)check if revealed card is an assassin
+    //(3)handle other card types, decrement score counter
 
     axios.put('http://localhost:3001/api/cards/'+ cardid, body)
       .catch(err => {
@@ -154,8 +159,17 @@ class Spyboys extends Component {
   handleCreateRoomClicked() {
     axios.post('http://localhost:3001/api/room')
       .then(res => {
-        this.setState({roomid : res.roomid});
+        // this.setState({roomid:res.roomid, isFetchingCards: true},
+        //       function() {
+        //         this.fetchCardsFromServer();
+        //       });
+        console.log(res.data.roomid);
+        this.handleTokenSubmit(res.data.roomid);
       })
+      // this.setState({roomid:res.roomid},
+      //       function() {
+      //         this.fetchCardsFromServer();
+      //       });
   }
   handleTokenSubmit(token) {
     //this.setState({roomid:token});
@@ -171,6 +185,12 @@ class Spyboys extends Component {
     //setInterval(this.fetchCardsFromServer(), 1000);
   }
   render() {
+
+    var woodTexture = {
+      background: "url(" + woodImg + ")",
+      backgroundSize: "cover",
+    };
+
     if (this.state.isFetchingCards) {
       return(
         <MuiThemeProvider>
@@ -179,7 +199,7 @@ class Spyboys extends Component {
       );
     } else {
       return (
-        <div style={style.spyboys}>
+        <div style={woodTexture}>
           <Header
             onCreateRoomClicked={this.handleCreateRoomClicked}
             onTokenSubmit={this.handleTokenSubmit}
