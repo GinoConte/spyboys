@@ -319,6 +319,7 @@ class Spyboys extends Component {
             onSelectTeam={this.handlePickedATeam}
             roomid={this.state.roomid}
             loadFromURL={false}
+            cards={this.state.cards}
             selectedTeam={this.state.selectedTeam}
             />
           {(this.state.roomid) ?

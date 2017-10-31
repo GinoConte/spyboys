@@ -129,7 +129,7 @@ class Header extends Component {
         <AppBar
           title={titleTextEntry}
           iconElementRight={<FlatButton label="Create Room" onClick={this.handleCreateRoom}/>}
-          iconElementLeft={selectTeam}
+          iconElementLeft={this.props.cards.length > 0 ? selectTeam : <span></span>}
           style={{...style.navbar, ...teamColour}}
           >
         </AppBar>
