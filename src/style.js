@@ -67,6 +67,10 @@ const style = {
   tokenhintstyle: {
     color: 'white',
   },
+  selectteambutton: {
+    color: 'white',
+    paddingTop: '8px',
+  },
   navbar: {
     //backgroundColor: '#43A047',
   },

@@ -8,6 +8,9 @@ import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
+import Popover from 'material-ui/Popover';
+import Menu from 'material-ui/Menu';
+import MenuItem from 'material-ui/MenuItem';
 
 class Header extends Component {
   constructor(props) {
@@ -15,11 +18,16 @@ class Header extends Component {
     this.state = {
       tokenField: '',
       submitted: !(this.props.roomid === ''),
+      selectTeamOpen: false,
+      selectedTeam: '',
     };
 
     this.handleCreateRoom = this.handleCreateRoom.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleTokenChange = this.handleTokenChange.bind(this);
+    this.handleSelectTeamOpen = this.handleSelectTeamOpen.bind(this);
+    this.handleSelectTeamClose = this.handleSelectTeamClose.bind(this);
+    this.handleTeamSelect = this.handleTeamSelect.bind(this);
   }
   handleCreateRoom(e) {
     this.props.onCreateRoomClicked();
@@ -34,6 +42,36 @@ class Header extends Component {
     //this.props.onTokenSubmit(this.state.tokenfield);
     this.props.onTokenSubmit('59f6bb34151943535121c313');
 
+  }
+  handleSelectTeamOpen(e) {
+    e.preventDefault();
+    this.setState({
+      selectTeamOpen: true,
+      anchorEl: e.currentTarget,
+    });
+  }
+  handleSelectTeamClose(e) {
+    this.setState({
+      selectTeamOpen: false,
+    })
+  }
+  handleTeamSelect(e, value) {
+    this.props.onSelectTeam(value);
+    this.setState({selectedTeam: value},
+      function() {
+        this.handleSelectTeamClose();
+      });
+
+  }
+  componentDidMount() {
+    console.log('header cards', this.props.cards);
+    console.log('params', this.props.params);
+    if (this.props.loadFromURL) {
+      if (this.props.cards.length == 0) {
+        console.log("Submitting: " + this.props.roomid);
+        this.props.onTokenSubmit(this.props.roomid);
+      }
+    }
   }
   render() {
     //determine title text based on whether or not a token has been submitted
@@ -56,13 +94,43 @@ class Header extends Component {
 
     );
 
+    var teamMenuText = {
+      color: '#444',
+    }
+    var selectTeam = (
+      <span>
+        <FlatButton label={this.props.selectedTeam ? "Change team" : "Select a team"} onClick={this.handleSelectTeamOpen} style={style.selectteambutton}/>
+        <Popover
+          open={this.state.selectTeamOpen}
+          anchorEl={this.state.anchorEl}
+          anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+          targetOrigin={{horizontal: 'left', vertical: 'top'}}
+          onRequestClose={this.handleSelectTeamClose}>
+          <Menu value={this.state.selectedTeam} onChange={this.handleTeamSelect}>
+            <MenuItem primaryText="Blue guessboy" value="blue" style={teamMenuText} />
+            <MenuItem primaryText="Blue clueboy"  value="blue clue" style={teamMenuText} />
+            <MenuItem primaryText="Red guessboy"  value="red" style={teamMenuText} />
+            <MenuItem primaryText="Red clueboy"  value="red clue"  style={teamMenuText} />
+          </Menu>
+        </Popover>
+      </span>
+    );
+
+    //check and change team colour
+    var teamColour = {};
+    if (this.props.selectedTeam) {
+      if (this.props.selectedTeam == 'red') {
+        teamColour.backgroundColor = '#F44336';
+      }
+    }
 
     return (
       <MuiThemeProvider>
         <AppBar
           title={titleTextEntry}
           iconElementRight={<FlatButton label="Create Room" onClick={this.handleCreateRoom}/>}
-          style={style.navbar}
+          iconElementLeft={selectTeam}
+          style={{...style.navbar, ...teamColour}}
           >
         </AppBar>
       </MuiThemeProvider>

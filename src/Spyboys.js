@@ -6,6 +6,8 @@ import style from './style';
 import CardGrid from './CardGrid';
 import ClueBoy from './ClueBoy';
 import Header from './Header';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+//import { Route, Switch } from 'react-router-dom';
 
 //material ui components
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -26,6 +28,8 @@ class Spyboys extends Component {
       teamTurn: '',
       redboy: {},
       blueboy: {},
+      selectedTeam: '',
+      isClueboy: false,
     };
 
     this.fetchCardsFromServer = this.fetchCardsFromServer.bind(this);
@@ -35,6 +39,7 @@ class Spyboys extends Component {
     this.advanceBoard = this.advanceBoard.bind(this);
     this.fetchWhosTurn = this.fetchWhosTurn.bind(this);
     this.fetchClueboysFromServer = this.fetchClueboysFromServer.bind(this);
+    this.handlePickedATeam = this.handlePickedATeam.bind(this);
   }
   fetchCardsFromServer() {
     if (this.state.roomid) {
@@ -60,10 +65,12 @@ class Spyboys extends Component {
         .then(res => {
           this.setState({teamTurn: res.data.teamTurn});
         })
+    } else {
+      this.setState({isFetchingCards: false });
     }
   }
   fetchClueboysFromServer() {
-    this.setState({isFetchingCards: true });    
+    this.setState({isFetchingCards: true });
     if (this.state.roomid) {
       axios.get('http://localhost:3001/api/room/' + this.state.roomid + '/fetchclueboys')
         .then(res => {
@@ -80,6 +87,8 @@ class Spyboys extends Component {
               this.setState({isFetchingCards: false});
             });
         })
+    } else {
+      this.setState({isFetchingCards: false });
     }
   }
   advanceBoard(cardid, roomid, cardcolour) {
@@ -90,7 +99,7 @@ class Spyboys extends Component {
     //(2)check if revealed card is an assassin
     //(3)handle other card types, decrement score counter
     //(4)add current clue to list of past clues
-    
+
     axios.put('http://localhost:3001/api/cards/'+ cardid, body)
       .catch(err => {
         console.log(err);
@@ -180,13 +189,10 @@ class Spyboys extends Component {
         console.log(res.data.roomid);
         this.handleTokenSubmit(res.data.roomid);
       })
-      // this.setState({roomid:res.roomid},
-      //       function() {
-      //         this.fetchCardsFromServer();
-      //       });
   }
   handleTokenSubmit(token) {
     //this.setState({roomid:token});
+    console.log("Handling " + token);
     this.setState({roomid:token},
           function() {
             this.fetchCardsFromServer();
@@ -196,16 +202,107 @@ class Spyboys extends Component {
 
     console.log(token);
   }
+  handlePickedATeam(teamstring) {
+    var team = "red";
+    if (teamstring.includes("blue")) {
+      team = "blue";
+    }
+    var pickedclueboy = false;
+    if (teamstring.includes("clue")) {
+      pickedclueboy = true;
+    }
+    this.setState({selectedTeam: team, isClueboy: pickedclueboy});
+  }
   componentDidMount() {
     this.fetchCardsFromServer();
     //setInterval(this.fetchCardsFromServer(), 1000);
   }
+  // render() {
+  //
+  //   var woodTexture = {
+  //     background: "url(" + woodImg + ")",
+  //     backgroundSize: "cover",
+  //   };
+  //
+  //   if (this.state.isFetchingCards) {
+  //     return(
+  //       <MuiThemeProvider>
+  //         <LinearProgress mode="indeterminate" />
+  //       </MuiThemeProvider>
+  //     );
+  //   } else {
+  //     return (
+  //       <div style={woodTexture}>
+  //         <Header
+  //           onCreateRoomClicked={this.handleCreateRoomClicked}
+  //           onTokenSubmit={this.handleTokenSubmit}
+  //           roomid={this.state.roomid}
+  //           />
+  //         {(this.state.roomid) ?
+  //           (<center><div style={style.clueboyholder}>
+  //             <ClueBoy
+  //               team={'blue'}
+  //               teamTurn={this.state.teamTurn}
+  //               currentClue={this.state.blueboy.currentClue}
+  //               pastClues={this.state.blueboy.pastclues}
+  //             />
+  //             <ClueBoy
+  //               team={'red'}
+  //               teamTurn={this.state.teamTurn}
+  //               currentClue={this.state.redboy.currentClue}
+  //               pastClues={this.state.redboy.pastclues}
+  //             />
+  //
+  //           </div>
+  //           <CardGrid
+  //             cards={this.state.cards} advanceBoard={this.advanceBoard}/>
+  //         </center>)
+  //         : null }
+  //       </div>
+  //     );
+  //   }
+  // }
   render() {
 
     var woodTexture = {
       background: "url(" + woodImg + ")",
       backgroundSize: "cover",
     };
+
+    //console.log("params", this.props.match.params);
+
+    const SpyboysToken = (props) => (
+      <div style={woodTexture}>
+        <Header
+          onCreateRoomClicked={this.handleCreateRoomClicked}
+          onTokenSubmit={this.handleTokenSubmit}
+          cards={this.state.cards}
+          loadFromURL={true}
+          roomid={props.match.params.token}
+          />
+        {(this.state.roomid) ?
+          (<center><div style={style.clueboyholder}>
+            <ClueBoy
+              team={'blue'}
+              teamTurn={this.state.teamTurn}
+              currentClue={this.state.blueboy.currentClue}
+              pastClues={this.state.blueboy.pastclues}
+            />
+            <ClueBoy
+              team={'red'}
+              teamTurn={this.state.teamTurn}
+              currentClue={this.state.redboy.currentClue}
+              pastClues={this.state.redboy.pastclues}
+            />
+
+          </div>
+          <CardGrid
+            cards={this.state.cards} advanceBoard={this.advanceBoard}/>
+        </center>)
+        : null }
+      </div>
+    );
+
 
     if (this.state.isFetchingCards) {
       return(
@@ -219,19 +316,22 @@ class Spyboys extends Component {
           <Header
             onCreateRoomClicked={this.handleCreateRoomClicked}
             onTokenSubmit={this.handleTokenSubmit}
+            onSelectTeam={this.handlePickedATeam}
             roomid={this.state.roomid}
+            loadFromURL={false}
+            selectedTeam={this.state.selectedTeam}
             />
           {(this.state.roomid) ?
             (<center><div style={style.clueboyholder}>
-              <ClueBoy 
-                team={'blue'} 
-                teamTurn={this.state.teamTurn} 
+              <ClueBoy
+                team={'blue'}
+                teamTurn={this.state.teamTurn}
                 currentClue={this.state.blueboy.currentClue}
                 pastClues={this.state.blueboy.pastclues}
               />
-              <ClueBoy 
-                team={'red'} 
-                teamTurn={this.state.teamTurn} 
+              <ClueBoy
+                team={'red'}
+                teamTurn={this.state.teamTurn}
                 currentClue={this.state.redboy.currentClue}
                 pastClues={this.state.redboy.pastclues}
               />
@@ -248,3 +348,5 @@ class Spyboys extends Component {
 }
 
 export default Spyboys;
+
+//          <Route exact path='/play' component={SpyboysNoToken}/>

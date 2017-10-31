@@ -29,7 +29,7 @@ function generate25WordArray(theme) { //returns
   let possibleWords = ['Rick', 'Morty', 'Time', 'Dimension', 'Portal', 'Plumbus', 'Neutrino', 'Meeseeks',
                        'Robot', 'Ants', 'Vindicator', 'Beth', 'Jerry', 'Summer', 'Birdperson', 'Citadel',
                        'C-137', 'Schmeckle', 'Ship', 'Space', 'Pickle', 'Tiny', 'Schwifty', 'Poopy', 'Flurbo',
-                       'Gwendolyn', 'Smidgen', 'Shrink', 'Ray', 'Genuis', 'Quinton', 'Horse'];
+                       'Gwendolyn', 'Smidgen', 'Shrink', 'Ray', 'Genuis', 'Quinton', 'Horse', '*Burp*'];
   let wordList = [];
   while (wordList.length < 25) {
     var selectedWord = possibleWords[Math.floor(Math.random()*possibleWords.length)];

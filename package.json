@@ -15,6 +15,7 @@
     "react-bootstrap": "^0.31.5",
     "react-cellblock": "^3.0.4",
     "react-dom": "^16.0.0",
+    "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.14",
     "react-stars": "^2.2.4",
     "reactstrap": "^5.0.0-alpha.3",
