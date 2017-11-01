@@ -30,6 +30,7 @@ function generate25WordArray(theme) { //returns
                        'Robot', 'Ants', 'Vindicator', 'Beth', 'Jerry', 'Summer', 'Birdperson', 'Citadel',
                        'C-137', 'Schmeckle', 'Ship', 'Space', 'Pickle', 'Tiny', 'Schwifty', 'Poopy', 'Flurbo',
                        'Gwendolyn', 'Smidgen', 'Shrink', 'Ray', 'Genuis', 'Quinton', 'Horse', '*Burp*'];
+                       
   let wordList = [];
   while (wordList.length < 25) {
     var selectedWord = possibleWords[Math.floor(Math.random()*possibleWords.length)];
@@ -92,11 +93,27 @@ router.route('/cards/:cardid')
       	card.save(function(err) {
         	if (err)
         	  res.send(err);
-        	//console.log('Plot information has been updated');
         	res.json({ message: 'Card state updated' });
 
       	});
     	});
+})
+
+//PUT -- update the state of a clueboy
+router.route('/clueboys/:clueboyid')
+.put(function(req, res) {
+  Clueboy.findById(req.params.clueboyid, function(err, clueboy) {
+    if (err)
+      res.send(err);
+    (req.body.currentClue) ? clueboy.currentClue = req.body.currentClue : null;
+    clueboy.save(function(err) {
+      if (err)
+        res.send(err);
+      console.log('Clueboy clue has been updated: '+clueboy.currentClue);
+      res.json({ message: 'Clueboy state updated' });
+
+    });
+  });
 })
 
 //create a new room
@@ -181,7 +198,7 @@ router.route('/room')
       _id: new mongoose.Types.ObjectId(),
       _parentRoom: room._id,
       team: 'red',
-      currentClue: '',
+      currentClue: 'im red',
       pastClues: [],
     });
     redClueboy.save(function (err) {
@@ -193,7 +210,7 @@ router.route('/room')
       _id: new mongoose.Types.ObjectId(),
       _parentRoom: room._id,
       team: 'blue',
-      currentClue: '',
+      currentClue: 'im blue',
       pastClues: [],
     });
     bluesCluesboy.save(function (err) {

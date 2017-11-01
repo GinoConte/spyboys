@@ -11,6 +11,8 @@ import FlatButton from 'material-ui/FlatButton';
 import Popover from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
+import TextField from 'material-ui/TextField';
+
 
 import imgf from './assets/unknown.jpg';
 
@@ -22,12 +24,16 @@ class ClueBoy extends Component {
       activeClue: '',
       isTurn: false,
       historyOpen: false,
+      clueinput: '',
+      submittedclue: false,
       //anchorTo: '',
     };
 
     //this.handleVoteClick = this.handleVoteClick.bind(this);
     this.handleHistoryOpen = this.handleHistoryOpen.bind(this);
     this.handleHistoryClose = this.handleHistoryClose.bind(this);
+    this.handleClueChange = this.handleClueChange.bind(this);
+    this.handleClueSubmit = this.handleClueSubmit.bind(this);
   }
   handleHistoryOpen(e) {
     e.preventDefault();
@@ -40,6 +46,20 @@ class ClueBoy extends Component {
     this.setState({
       historyOpen: false,
     })
+  }
+  handleClueChange(e) {
+    this.setState({
+      clueinput: e.target.value,
+    })
+  }
+  handleClueSubmit(e) {
+    e.preventDefault();
+    //console.log("submitting clue", this.props.id);
+    this.setState({submittedclue: true});
+    this.props.onClueSubmit(this.props.id, this.state.clueinput);
+  }
+  componentDidMount() {
+
   }
   render() {
     var teamColour = '#ff715e';
@@ -58,7 +78,7 @@ class ClueBoy extends Component {
 
     //determine turn from props
     if (this.props.teamTurn === this.props.team) {
-      this.props.team === 'red' ? iconStyles.color = '#f00' : iconStyles.color = '#00f';
+      this.props.team === 'red' ? iconStyles.color = '#F44336' : iconStyles.color = '#03A9F4';
     } else {
       iconStyles.color = '#777';
     }
@@ -66,6 +86,27 @@ class ClueBoy extends Component {
     var leftSide = (
         <FontIcon className="material-icons" style={iconStyles}>stars</FontIcon>
     );
+
+    var centerText = '"' + this.props.currentClue + '"';
+    var centerComponent = (
+      <div style={style.clueboytext}>{centerText}</div>
+    );
+    if (this.props.isClueboy && this.props.selectedTeam === this.props.team && !this.state.submittedclue) {
+      centerComponent = (
+        <form onSubmit={this.handleClueSubmit}>
+        <TextField
+          hintText="enter clue"
+          hintStyle={style.cluetexthint}
+          underlineFocusStyle={style.cluetextunderline}
+          inputStyle={style.cluetexthint}
+          onChange={this.handleClueChange}
+          value={this.state.clueinput}
+          style={style.clueboytextentry}
+          maxLength={25}
+        />
+        </form>
+      )
+    }
 
     var historyMenuText = {
       color: '#444',
@@ -99,7 +140,7 @@ class ClueBoy extends Component {
         <WhatDoYaThink style={{...style.clueboy}} zDepth={3}>
 
             {(this.props.team === 'red') ? (leftSide) : (rightSide)}
-            <CardTitle title={'"' + this.props.currentClue + '"'} subtitle={this.props.team + ' clueboy'} style={style.clueboyrow}/>
+            <CardTitle title={centerComponent} subtitle={this.props.team === 'blue' ? 'blue\'s clues boy\'s clue' : 'red clueboy\'s clue, boy'} style={style.clueboyrow}/>
             {(this.props.team === 'red') ? (rightSide) : (leftSide)}
 
 

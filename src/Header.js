@@ -40,7 +40,7 @@ class Header extends Component {
     e.preventDefault();
     this.setState({tokenfield: '', submitted: true});
     //this.props.onTokenSubmit(this.state.tokenfield);
-    this.props.onTokenSubmit('59f6bb34151943535121c313');
+    this.props.onTokenSubmit('59f920af4963dd8ef18911ce');
 
   }
   handleSelectTeamOpen(e) {
@@ -64,14 +64,14 @@ class Header extends Component {
 
   }
   componentDidMount() {
-    console.log('header cards', this.props.cards);
-    console.log('params', this.props.params);
-    if (this.props.loadFromURL) {
-      if (this.props.cards.length == 0) {
-        console.log("Submitting: " + this.props.roomid);
-        this.props.onTokenSubmit(this.props.roomid);
-      }
-    }
+    // console.log('header cards', this.props.cards);
+    // console.log('params', this.props.params);
+    // if (this.props.loadFromURL) {
+    //   if (this.props.cards.length == 0) {
+    //     console.log("Submitting: " + this.props.roomid);
+    //     this.props.onTokenSubmit(this.props.roomid);
+    //   }
+    // }
   }
   render() {
     //determine title text based on whether or not a token has been submitted
@@ -121,6 +121,13 @@ class Header extends Component {
     if (this.props.selectedTeam) {
       if (this.props.selectedTeam == 'red') {
         teamColour.backgroundColor = '#F44336';
+        if (this.props.isClueboy) {
+          teamColour.backgroundColor = '#B71C1C';
+        }
+      } else {
+        if (this.props.isClueboy) {
+          teamColour.backgroundColor = '#01579B';
+        }
       }
     }
 

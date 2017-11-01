@@ -16,12 +16,21 @@ const style = {
     //backgroundColor: '#333',
     width: '1200px',
   },
+  clueboytextentry: {
+    width: '150px',
+    height: '40px',
+  },
+  clueboytext: {
+    width: '150px',
+    height: '30px',
+    paddingBottom: '40px',
+  },
   clueboyholder: {
     //backgroundColor: '#555',
     width: '1200px',
   },
   clueboy: {
-    width: '350px',
+    width: '400px',
     height: '95px',
     //backgroundColor: '#855',
     display: 'inline-block',
@@ -32,6 +41,7 @@ const style = {
   },
   clueboyrow: {
     display: 'inline-block',
+    //width: '600px',
     //backgroundColor: '#555'
   },
   clueboyinfo: {

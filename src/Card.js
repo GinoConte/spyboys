@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import style from './style';
-import CardVotes from './CardVotes';
+//import CardVotes from './CardVotes';
 
 // import { Card as ThatsBone, CardImg, /*CardText,*/ CardBody,
 //   CardTitle, CardSubtitle, Button as ButtonRS } from 'reactstrap';
@@ -8,9 +8,9 @@ import CardVotes from './CardVotes';
 
 //material ui components
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import RaisedButton from 'material-ui/RaisedButton';
+//import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
-import {Card as WhatDoYaThink, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import {Card as WhatDoYaThink, /*CardActions, CardHeader, CardMedia,*/ CardTitle, /*CardText*/} from 'material-ui/Card';
 
 class Card extends Component {
   constructor(props) {
@@ -55,11 +55,12 @@ class Card extends Component {
   }
   render() {
 
+    var cardColour;
     //assign colour based on state
     if (this.state.state === "none") {
-      var cardColour = '#FFF59D';
+      cardColour = '#FFF59D';
     } else {
-      var cardColour = '#ffa09b';
+      cardColour = '#ffa09b';
       if (this.props.colour === 'blue')
         cardColour = '#b5f1ff';
       if (this.props.colour === 'black')
@@ -78,7 +79,6 @@ class Card extends Component {
     } else {
       pigstyle.background = cardColour;
     }
-    var textStyle = {color: '#666'};
 
     //disable lock in button based on revealed
     if (this.state.state === "revealed") {
