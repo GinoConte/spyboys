@@ -57,7 +57,7 @@ class Card extends Component {
 
     var cardColour;
     //assign colour based on state
-    if (this.state.state === "none") {
+    if (this.state.state === "none" && !this.props.isClueboy) {
       cardColour = '#FFF59D';
     } else {
       cardColour = '#ffa09b';
@@ -89,8 +89,8 @@ class Card extends Component {
       <MuiThemeProvider>
         <WhatDoYaThink style={{...style.card}} zDepth={depth}>
           <CardTitle title={isRevealed ? ( <span> &nbsp;</span>) : this.props.word} subtitle={isRevealed ? (<span> &nbsp;</span>) : this.props.theme} style={pigstyle}/>
-          <FlatButton label="Highlight" onClick={this.handleHighlight} disabled={isRevealed}/>
-          <FlatButton label="Lock In" onClick={this.handleLockIn} primary={true} disabled={isRevealed}/>
+          <FlatButton label="Highlight" onClick={this.handleHighlight} disabled={(isRevealed || this.props.isClueboy)}/>
+          <FlatButton label="Lock In" onClick={this.handleLockIn} primary={true} disabled={(isRevealed || this.props.isClueboy)}/>
         </WhatDoYaThink>
       </MuiThemeProvider>
     );

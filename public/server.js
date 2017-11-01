@@ -106,6 +106,8 @@ router.route('/clueboys/:clueboyid')
     if (err)
       res.send(err);
     (req.body.currentClue) ? clueboy.currentClue = req.body.currentClue : null;
+    (req.body.clueSubmitted) ? clueboy.clueSubmitted = req.body.clueSubmitted : null;
+    (req.body.decrease) ? clueboy.cardsRemaining = clueboy.cardsRemaining - 1 : null;
     clueboy.save(function(err) {
       if (err)
         res.send(err);
@@ -131,16 +133,25 @@ router.route('/room')
     room.redScore = 1;
     room.blueScore = 2;
 
-    let coinFlip = Math.floor(Math.random() * 2) + 1;
+    let coinFlip = Math.floor(Math.random() * 2) + 1; //pick starting team!
     if (coinFlip == 1) {
       room.teamTurn = 'red';
     } else {
       room.teamTurn = 'blue';
     }
 
+    var redLeft;
+    var blueLeft;
     //create game board with 25 cards
-    let redLeft = 9;//subject to rules
-    let blueLeft = 9;
+    if (room.teamTurn === 'red') {
+      redLeft = 9;
+      blueLeft = 8;
+    } else {
+      redLeft = 8;
+      blueLeft = 9;
+    }
+    var cbrl = redLeft;
+    var cbbl = blueLeft;
     let blackLeft = 1;
     let greenLeft = 25 - redLeft - blueLeft - blackLeft;
 
@@ -200,6 +211,8 @@ router.route('/room')
       team: 'red',
       currentClue: 'im red',
       pastClues: [],
+      clueSubmitted: false,
+      cardsRemaining: cbrl,
     });
     redClueboy.save(function (err) {
       if (err)
@@ -212,6 +225,8 @@ router.route('/room')
       team: 'blue',
       currentClue: 'im blue',
       pastClues: [],
+      clueSubmitted: false,
+      cardsRemaining: cbbl,
     });
     bluesCluesboy.save(function (err) {
       if (err)

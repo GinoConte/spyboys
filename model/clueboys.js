@@ -14,6 +14,8 @@ var ClueboysSchema = new Schema({
   team: String,
   currentClue: String,
   pastClues: [String],
+  clueSubmitted: Boolean,
+  cardsRemaining: Number,
 });
 
 //export our module to use in server.js

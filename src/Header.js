@@ -40,7 +40,7 @@ class Header extends Component {
     e.preventDefault();
     this.setState({tokenfield: '', submitted: true});
     //this.props.onTokenSubmit(this.state.tokenfield);
-    this.props.onTokenSubmit('59f920af4963dd8ef18911ce');
+    this.props.onTokenSubmit('59f958a145ffdf99354d10cc');
 
   }
   handleSelectTeamOpen(e) {

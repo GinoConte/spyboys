@@ -12,6 +12,8 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 //material ui components
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import LinearProgress from 'material-ui/LinearProgress';
+import Snackbar from 'material-ui/Snackbar';
+
 
 //import img
 import woodImg from './assets/wood.jpg';
@@ -30,6 +32,8 @@ class Spyboys extends Component {
       blueboy: {},
       selectedTeam: '',
       isClueboy: false,
+      gameover: false,
+      winner: '',
     };
 
     this.fetchCardsFromServer = this.fetchCardsFromServer.bind(this);
@@ -95,15 +99,65 @@ class Spyboys extends Component {
     let body = {
       state : 'revealed',
     }
-    //(2)check if revealed card is an assassin
-    //(3)handle other card types, decrement score counter
-    //(4)add current clue to list of past clues
-
     axios.put('http://localhost:3001/api/cards/'+ cardid, body)
       .catch(err => {
         console.log(err);
     });
 
+    //(2)check if revealed card is an assassin
+    if (cardcolour === 'black') {
+      this.setState({gameover: true});
+      //game over, change state to true and render small gameover alert
+    } else { //(3)handle other card types, decrement score counter
+      if (cardcolour === 'blue') {
+        body = {
+          decrease: true,
+        }
+        let blueboyid = this.state.blueboy._id;
+        axios.put('http://localhost:3001/api/clueboys/'+ blueboyid, body)
+        .then(res => {
+          this.fetchClueboysFromServer();
+        })
+          .catch(err => {
+            console.log(err);
+        });
+      } else if (cardcolour === 'red') {
+        body = {
+          decrease: true,
+        }
+        let redboyid = this.state.redboy._id;
+        axios.put('http://localhost:3001/api/clueboys/'+ redboyid, body)
+        .then(res => {
+          this.fetchClueboysFromServer();
+        })
+          .catch(err => {
+            console.log(err);
+        });
+      }
+    }
+
+
+    //(4)add current clue to list of past clues (low prio)
+
+    //(5)reset cluesubmitted flag on enemy currentTurn's (before advancing) clueboy
+    let clueboyid = this.state.blueboy._id;
+    if (this.state.teamTurn === 'blue') {
+      clueboyid = this.state.redboy._id;
+    }
+    body = {
+      clueSubmitted: 'false',
+    }
+    axios.put('http://localhost:3001/api/clueboys/'+ clueboyid, body)
+    .then(res => {
+      this.fetchClueboysFromServer();
+    })
+      .catch(err => {
+        console.log(err);
+    });
+
+
+    
+    //(6) change the current turn -----------
     let nextTeamTurn = 'blue';
     if (this.state.teamTurn === 'blue') {
       nextTeamTurn = 'red';
@@ -161,6 +215,7 @@ class Spyboys extends Component {
   handleClueSubmit(clueboyid, clue) {
     let body = {
       currentClue : clue,
+      clueSubmitted: true,
     }
     axios.put('http://localhost:3001/api/clueboys/'+ clueboyid, body)
       .then(res => {
@@ -169,6 +224,9 @@ class Spyboys extends Component {
         .catch(err => {
           console.log(err);
     });
+  }
+  handleGameoverClose() {
+    this.setState({gameover: false})
   }
   componentDidMount() {
     this.fetchCardsFromServer();
@@ -240,26 +298,43 @@ class Spyboys extends Component {
                 team={'blue'}
                 teamTurn={this.state.teamTurn}
                 id={this.state.blueboy._id}
+                cardsRemaining={this.state.blueboy.cardsRemaining}
                 currentClue={this.state.blueboy.currentClue}
                 pastClues={this.state.blueboy.pastclues}
                 selectedTeam={this.state.selectedTeam}
                 isClueboy={this.state.isClueboy}
                 onClueSubmit={this.handleClueSubmit}
+                clueSubmitted={this.state.blueboy.clueSubmitted}
               />
               <ClueBoy
                 team={'red'}
                 teamTurn={this.state.teamTurn}
                 id={this.state.redboy._id}
+                cardsRemaining={this.state.redboy.cardsRemaining}
                 currentClue={this.state.redboy.currentClue}
                 pastClues={this.state.redboy.pastclues}
                 selectedTeam={this.state.selectedTeam}
                 isClueboy={this.state.isClueboy}
                 onClueSubmit={this.handleClueSubmit}
+                clueSubmitted={this.state.redboy.clueSubmitted}
               />
 
             </div>
             <CardGrid
-              cards={this.state.cards} advanceBoard={this.advanceBoard}/>
+              cards={this.state.cards} 
+              advanceBoard={this.advanceBoard} 
+              selectedTeam={this.state.selectedTeam}
+              isClueboy={this.state.isClueboy}
+              />
+              <MuiThemeProvider>
+              <Snackbar
+                open={this.state.gameover}
+                message="Gameover!"
+                autoHideDuration={4000}
+                onRequestClose={this.handleRequestClose}
+              />
+              </MuiThemeProvider>
+
           </center>)
           : null }
         </div>

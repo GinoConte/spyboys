@@ -25,7 +25,7 @@ class ClueBoy extends Component {
       isTurn: false,
       historyOpen: false,
       clueinput: '',
-      submittedclue: false,
+      clueSubmitted: this.props.clueSubmitted,
       //anchorTo: '',
     };
 
@@ -55,7 +55,7 @@ class ClueBoy extends Component {
   handleClueSubmit(e) {
     e.preventDefault();
     //console.log("submitting clue", this.props.id);
-    this.setState({submittedclue: true});
+    this.setState({submittedclue: true, clueinput: ''});
     this.props.onClueSubmit(this.props.id, this.state.clueinput);
   }
   componentDidMount() {
@@ -76,6 +76,7 @@ class ClueBoy extends Component {
       fontSize: 40,
     };
 
+    //console.log("clue submitted for " + this.props.team, this.props.clueSubmitted);
     //determine turn from props
     if (this.props.teamTurn === this.props.team) {
       this.props.team === 'red' ? iconStyles.color = '#F44336' : iconStyles.color = '#03A9F4';
@@ -91,7 +92,8 @@ class ClueBoy extends Component {
     var centerComponent = (
       <div style={style.clueboytext}>{centerText}</div>
     );
-    if (this.props.isClueboy && this.props.selectedTeam === this.props.team && !this.state.submittedclue) {
+    if (this.props.isClueboy && this.props.selectedTeam === this.props.team && !this.props.clueSubmitted) {
+    //if (!this.props.clueSubmitted) {
       centerComponent = (
         <form onSubmit={this.handleClueSubmit}>
         <TextField
@@ -111,9 +113,11 @@ class ClueBoy extends Component {
     var historyMenuText = {
       color: '#444',
     }
+    var cardsRemainingText = {};
+    this.props.team === 'red' ? cardsRemainingText.color = '#F44336' : cardsRemainingText.color = '#03A9F4';
     var clueboyState = (
       <div>
-        <FlatButton label="9 LEFT" disabled={true}/><br></br>
+        <FlatButton label={this.props.cardsRemaining + ' left'} disabled={true} style={cardsRemainingText}/><br></br>
         <RaisedButton label="HISTORY" onClick={this.handleHistoryOpen}/>
           <Popover
             open={this.state.historyOpen}
