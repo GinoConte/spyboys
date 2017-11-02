@@ -19,7 +19,8 @@ class CardGrid extends Component {
           key={card._id}
           isClueboy={this.props.isClueboy}
           selectedTeam={this.props.selectedTeam}
-          advanceBoard={this.props.advanceBoard} 
+          advanceBoard={this.props.advanceBoard}
+          teamTurn={this.props.teamTurn}
           state={card.state}>
           {card.text}
         </Card>

@@ -26,11 +26,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 function generate25WordArray(theme) { //returns
-  let possibleWords = ['Rick', 'Morty', 'Time', 'Dimension', 'Portal', 'Plumbus', 'Neutrino', 'Meeseeks',
+  let ricknmorty = ['Rick', 'Morty', 'Time', 'Dimension', 'Portal', 'Plumbus', 'Neutrino', 'Meeseeks',
                        'Robot', 'Ants', 'Vindicator', 'Beth', 'Jerry', 'Summer', 'Birdperson', 'Citadel',
                        'C-137', 'Schmeckle', 'Ship', 'Space', 'Pickle', 'Tiny', 'Schwifty', 'Poopy', 'Flurbo',
                        'Gwendolyn', 'Smidgen', 'Shrink', 'Ray', 'Genuis', 'Quinton', 'Horse', '*Burp*'];
-                       
+
+  let simpsons = ['Homer', 'Bart', 'Lisa', 'Marge', 'Abe', 'Snowball', 'Apu', 'Wiggum', 'Lenny', 'Nuclear',
+                  'Skinner', 'Springfield', 'Maggie', 'Steamed Hams', 'Flanders', 'Scorpio', 'Winnipeg', 'Moe',
+                  'Duff', 'Tavern', 'Bonestorm', 'Milhouse', 'Treehouse', 'Shorts', 'D\'oh', 'Krusty']
+
+  let possibleWords = ricknmorty.concat(simpsons);
+
   let wordList = [];
   while (wordList.length < 25) {
     var selectedWord = possibleWords[Math.floor(Math.random()*possibleWords.length)];
@@ -163,7 +169,7 @@ router.route('/room')
                 _id: new mongoose.Types.ObjectId(),
         _parentRoom: room._id,
       //         word: "Bepsi",
-              theme: "Rock and Morto",
+              theme: "Toonz",
               state: "none",
       });
 
@@ -209,7 +215,7 @@ router.route('/room')
       _id: new mongoose.Types.ObjectId(),
       _parentRoom: room._id,
       team: 'red',
-      currentClue: 'im red',
+      currentClue: '',
       pastClues: [],
       clueSubmitted: false,
       cardsRemaining: cbrl,
@@ -223,7 +229,7 @@ router.route('/room')
       _id: new mongoose.Types.ObjectId(),
       _parentRoom: room._id,
       team: 'blue',
-      currentClue: 'im blue',
+      currentClue: '',
       pastClues: [],
       clueSubmitted: false,
       cardsRemaining: cbbl,

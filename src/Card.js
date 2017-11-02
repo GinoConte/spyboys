@@ -80,6 +80,13 @@ class Card extends Component {
       pigstyle.background = cardColour;
     }
 
+    //assign styling based on whether or not player is a clueboy
+    if (this.props.isClueboy && this.state.state === 'revealed') {
+      pigstyle.background = "repeating-linear-gradient(45deg,#FFF59D,#FFF59D 10px,#fffad3 10px,#fffad3 20px)";
+    } else {
+      pigstyle.background = cardColour;
+    }
+
     //disable lock in button based on revealed
     if (this.state.state === "revealed") {
       var isRevealed = true;
@@ -90,7 +97,7 @@ class Card extends Component {
         <WhatDoYaThink style={{...style.card}} zDepth={depth}>
           <CardTitle title={isRevealed ? ( <span> &nbsp;</span>) : this.props.word} subtitle={isRevealed ? (<span> &nbsp;</span>) : this.props.theme} style={pigstyle}/>
           <FlatButton label="Highlight" onClick={this.handleHighlight} disabled={(isRevealed || this.props.isClueboy)}/>
-          <FlatButton label="Lock In" onClick={this.handleLockIn} primary={true} disabled={(isRevealed || this.props.isClueboy)}/>
+          <FlatButton label="Lock In" onClick={this.handleLockIn} primary={true} disabled={(isRevealed || this.props.isClueboy || !(this.props.teamTurn === this.props.selectedTeam))}/>
         </WhatDoYaThink>
       </MuiThemeProvider>
     );

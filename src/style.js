@@ -32,7 +32,7 @@ const style = {
   clueboy: {
     width: '400px',
     height: '95px',
-    //backgroundColor: '#855',
+    backgroundColor: '#eee',
     display: 'inline-block',
     marginLeft: '20px',
     marginRight: '20px',

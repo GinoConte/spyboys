@@ -47,6 +47,7 @@ class Spyboys extends Component {
     this.handleClueSubmit = this.handleClueSubmit.bind(this);
   }
   fetchCardsFromServer() {
+    console.log("fetching for " + this.state.roomid);
     if (this.state.roomid) {
       //console.log("hi room id " + this.state.roomid);
       this.setState({isFetchingCards: true });
@@ -156,7 +157,7 @@ class Spyboys extends Component {
     });
 
 
-    
+
     //(6) change the current turn -----------
     let nextTeamTurn = 'blue';
     if (this.state.teamTurn === 'blue') {
@@ -230,7 +231,9 @@ class Spyboys extends Component {
   }
   componentDidMount() {
     this.fetchCardsFromServer();
-    //setInterval(this.fetchCardsFromServer(), 1000);
+
+    setInterval(this.fetchCardsFromServer(), 1000);
+
   }
   render() {
 
@@ -321,10 +324,11 @@ class Spyboys extends Component {
 
             </div>
             <CardGrid
-              cards={this.state.cards} 
-              advanceBoard={this.advanceBoard} 
+              cards={this.state.cards}
+              advanceBoard={this.advanceBoard}
               selectedTeam={this.state.selectedTeam}
               isClueboy={this.state.isClueboy}
+              teamTurn={this.state.teamTurn}
               />
               <MuiThemeProvider>
               <Snackbar

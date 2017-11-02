@@ -88,7 +88,12 @@ class ClueBoy extends Component {
         <FontIcon className="material-icons" style={iconStyles}>stars</FontIcon>
     );
 
-    var centerText = '"' + this.props.currentClue + '"';
+    var centerText;
+    if (this.props.currentClue === '') {
+      centerText = 'No clue yet';
+    } else {
+      centerText = '"' + this.props.currentClue + '"';
+    }
     var centerComponent = (
       <div style={style.clueboytext}>{centerText}</div>
     );
@@ -116,8 +121,8 @@ class ClueBoy extends Component {
     var cardsRemainingText = {};
     this.props.team === 'red' ? cardsRemainingText.color = '#F44336' : cardsRemainingText.color = '#03A9F4';
     var clueboyState = (
-      <div>
-        <FlatButton label={this.props.cardsRemaining + ' left'} disabled={true} style={cardsRemainingText}/><br></br>
+      <div style={style.clueboystate}>
+        <FlatButton label={this.props.cardsRemaining ? this.props.cardsRemaining + ' left' : 'loading...'} disabled={true} style={cardsRemainingText}/><br></br>
         <RaisedButton label="HISTORY" onClick={this.handleHistoryOpen}/>
           <Popover
             open={this.state.historyOpen}
