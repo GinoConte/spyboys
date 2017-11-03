@@ -7,6 +7,7 @@ import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import Popover from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
@@ -74,6 +75,15 @@ class Header extends Component {
     // }
   }
   render() {
+    var gameinterface = (
+      <div style={style.gameinterface}>
+        <FlatButton label={this.props.roomid ? this.props.roomid : "Loading..."} style={style.headerbuttontext} disabled={true}/>
+        <FlatButton label="COPY ROOM ID" style={style.headerbuttonflat} />
+        <FlatButton label="WAITING ON: RED TEAM (3 GUESSES)" style={style.headerbuttontext} disabled={true}/>
+        <FlatButton label="END TURN EARLY" style={style.headerbuttonflatimportant} />
+      </div>
+    );
+
     //determine title text based on whether or not a token has been submitted
     var titleTextEntry = (
       <div style={style.tokenfield}><center>
@@ -88,7 +98,7 @@ class Header extends Component {
           value={this.state.tokenfield}
         />
       <FlatButton type="Submit" label="Submit" style={style.tokenhintstyle} />
-      </form>) : (<span>Joined room: {this.props.roomid}</span>) }
+      </form>) : (gameinterface) }
 
       </center></div>
 

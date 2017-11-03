@@ -12,6 +12,7 @@ import Popover from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
+import Slider from 'material-ui/Slider';
 
 
 import imgf from './assets/unknown.jpg';
@@ -25,6 +26,7 @@ class ClueBoy extends Component {
       isTurn: false,
       historyOpen: false,
       clueinput: '',
+      clueguessesinput: '',
       clueSubmitted: this.props.clueSubmitted,
       //anchorTo: '',
     };
@@ -33,6 +35,7 @@ class ClueBoy extends Component {
     this.handleHistoryOpen = this.handleHistoryOpen.bind(this);
     this.handleHistoryClose = this.handleHistoryClose.bind(this);
     this.handleClueChange = this.handleClueChange.bind(this);
+    this.handleClueNumberChange = this.handleClueNumberChange.bind(this);
     this.handleClueSubmit = this.handleClueSubmit.bind(this);
   }
   handleHistoryOpen(e) {
@@ -52,8 +55,15 @@ class ClueBoy extends Component {
       clueinput: e.target.value,
     })
   }
+  handleClueNumberChange(e) {
+    //clean input to be numbers only
+    let cleanInput  = e.target.value.replace(/[^0-9]+/, '');
+    this.setState({
+      clueguessesinput: cleanInput,
+    })
+  }
   handleClueSubmit(e) {
-    e.preventDefault();
+    //e.preventDefault();
     //console.log("submitting clue", this.props.id);
     this.setState({submittedclue: true, clueinput: ''});
     this.props.onClueSubmit(this.props.id, this.state.clueinput);
@@ -73,6 +83,7 @@ class ClueBoy extends Component {
     //style the turn token (font icon)
     const iconStyles = {
       margin: 15,
+      //marginBottom: 55,
       fontSize: 40,
     };
 
@@ -85,11 +96,11 @@ class ClueBoy extends Component {
     }
 
     var leftSide = (
-        <FontIcon className="material-icons" style={iconStyles}>stars</FontIcon>
+        <FontIcon className="material-icons" style={{...iconStyles, ...style.clueboyicon}}>stars</FontIcon>
     );
 
     var centerText;
-    if (this.props.currentClue === '') {
+    if (!this.props.currentClue) {
       centerText = 'No clue yet';
     } else {
       centerText = '"' + this.props.currentClue + '"';
@@ -100,19 +111,42 @@ class ClueBoy extends Component {
     if (this.props.isClueboy && this.props.selectedTeam === this.props.team && !this.props.clueSubmitted) {
     //if (!this.props.clueSubmitted) {
       centerComponent = (
-        <form onSubmit={this.handleClueSubmit}>
-        <TextField
-          hintText="enter clue"
-          hintStyle={style.cluetexthint}
-          underlineFocusStyle={style.cluetextunderline}
-          inputStyle={style.cluetexthint}
-          onChange={this.handleClueChange}
-          value={this.state.clueinput}
-          style={style.clueboytextentry}
-          maxLength={25}
-        />
-        </form>
+        <div style={style.clueboyclueentry}>
+          <form onSubmit={this.handleClueSubmit}>
+          <TextField
+            hintText="clue"
+            hintStyle={style.cluetexthint}
+            underlineFocusStyle={style.cluetextunderline}
+            inputStyle={style.cluetexthint}
+            onChange={this.handleClueChange}
+            value={this.state.clueinput}
+            style={style.clueboytextentry}
+            maxLength={15}
+          />
+          <TextField
+            hintText="words"
+            hintStyle={style.cluetexthint}
+            underlineFocusStyle={style.cluetextunderline}
+            inputStyle={style.cluetexthint}
+            onChange={this.handleClueNumberChange}
+            value={this.state.clueguessesinput}
+            style={style.clueboynumberentry}
+            maxLength={2}
+          />
+          </form>
+        </div>
       )
+    }
+
+    var subtitleComponent = (
+      <span>
+        {this.props.team === 'blue' ? 'blue\'s clues boy\'s clue' : 'red clueboy\'s clue, boy'}
+      </span>
+    );
+    if (this.props.isClueboy && this.props.selectedTeam === this.props.team && !this.props.clueSubmitted) {
+      subtitleComponent = (
+        <span>&nbsp;</span>
+      );
     }
 
     var historyMenuText = {
@@ -143,13 +177,14 @@ class ClueBoy extends Component {
       <CardTitle title={clueboyState} style={style.clueboyinfo}/>
     );
 
+    console.log("number input", this.state.clueinput);
     return (
       <MuiThemeProvider>
 
         <WhatDoYaThink style={{...style.clueboy}} zDepth={3}>
 
             {(this.props.team === 'red') ? (leftSide) : (rightSide)}
-            <CardTitle title={centerComponent} subtitle={this.props.team === 'blue' ? 'blue\'s clues boy\'s clue' : 'red clueboy\'s clue, boy'} style={style.clueboyrow}/>
+            <CardTitle title={centerComponent} subtitle={subtitleComponent} style={style.clueboyrow}/>
             {(this.props.team === 'red') ? (rightSide) : (leftSide)}
 
 

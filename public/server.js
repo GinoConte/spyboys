@@ -25,17 +25,22 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+var ricknmorty = ['Rick', 'Morty', 'Time', 'Dimension', 'Portal', 'Plumbus', 'Neutrino', 'Meeseeks',
+'Robot', 'Ants', 'Vindicator', 'Beth', 'Jerry', 'Summer', 'Birdperson', 'Citadel',
+'C-137', 'Schmeckle', 'Ship', 'Space', 'Pickle', 'Tiny', 'Schwifty', 'Poopy', 'Flurbo',
+'Gwendolyn', 'Smidgen', 'Shrink', 'Ray', 'Genuis', 'Quinton', 'Horse', '*Burp*'];
+
+var simpsons = ['Homer', 'Bart', 'Lisa', 'Marge', 'Abe', 'Snowball', 'Apu', 'Wiggum', 'Lenny', 'Nuclear',
+'Skinner', 'Springfield', 'Maggie', 'Steamed Hams', 'Flanders', 'Scorpio', 'Winnipeg', 'Moe',
+'Duff', 'Tavern', 'Bonestorm', 'Milhouse', 'Treehouse', 'Shorts', 'D\'oh', 'Krusty']
+
+var australia = ['Straya', 'Grog', 'Goon', 'Oath', 'Stubby', 'Abbott', 'Kevin', 'Ute', 'Roo', 'Platypus', 'Sydney',
+'Melbourne', 'S\'truth', 'Bikkie', 'Grouse', 'Wallaby', 'Mate', 'Magpie', 'Spewwin', 'Budgie']
+
 function generate25WordArray(theme) { //returns
-  let ricknmorty = ['Rick', 'Morty', 'Time', 'Dimension', 'Portal', 'Plumbus', 'Neutrino', 'Meeseeks',
-                       'Robot', 'Ants', 'Vindicator', 'Beth', 'Jerry', 'Summer', 'Birdperson', 'Citadel',
-                       'C-137', 'Schmeckle', 'Ship', 'Space', 'Pickle', 'Tiny', 'Schwifty', 'Poopy', 'Flurbo',
-                       'Gwendolyn', 'Smidgen', 'Shrink', 'Ray', 'Genuis', 'Quinton', 'Horse', '*Burp*'];
 
-  let simpsons = ['Homer', 'Bart', 'Lisa', 'Marge', 'Abe', 'Snowball', 'Apu', 'Wiggum', 'Lenny', 'Nuclear',
-                  'Skinner', 'Springfield', 'Maggie', 'Steamed Hams', 'Flanders', 'Scorpio', 'Winnipeg', 'Moe',
-                  'Duff', 'Tavern', 'Bonestorm', 'Milhouse', 'Treehouse', 'Shorts', 'D\'oh', 'Krusty']
 
-  let possibleWords = ricknmorty.concat(simpsons);
+  let possibleWords = ricknmorty.concat(australia);
 
   let wordList = [];
   while (wordList.length < 25) {
@@ -174,6 +179,11 @@ router.route('/room')
       });
 
       currCard.word = words[i];
+      if (australia.includes(currCard.word)) {
+        currCard.theme = 'Straya';
+      } else {
+        currCard.theme = 'Rocko and Mortimer';
+      }
 
 
       //console.log (currCard);
