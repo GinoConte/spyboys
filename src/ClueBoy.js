@@ -51,8 +51,10 @@ class ClueBoy extends Component {
     })
   }
   handleClueChange(e) {
+    let cleanInput  = e.target.value.replace(/\s+/g, '');
+    console.log("clearinput", cleanInput);
     this.setState({
-      clueinput: e.target.value,
+      clueinput: cleanInput,
     })
   }
   handleClueNumberChange(e) {
@@ -64,9 +66,9 @@ class ClueBoy extends Component {
   }
   handleClueSubmit(e) {
     //e.preventDefault();
-    //console.log("submitting clue", this.props.id);
-    this.setState({submittedclue: true, clueinput: ''});
-    this.props.onClueSubmit(this.props.id, this.state.clueinput);
+    //console.log("submitting clue", this.state.clueinput + " with " + this.state.clueguessesinput);
+    this.setState({submittedclue: true, clueinput: '', clueguessesinput: ''}); //required
+    this.props.onClueSubmit(this.props.id, this.state.clueinput, this.state.clueguessesinput);
   }
   componentDidMount() {
 
@@ -84,7 +86,7 @@ class ClueBoy extends Component {
     const iconStyles = {
       margin: 15,
       //marginBottom: 55,
-      fontSize: 40,
+      fontSize: 45,
     };
 
     //console.log("clue submitted for " + this.props.team, this.props.clueSubmitted);
@@ -96,24 +98,32 @@ class ClueBoy extends Component {
     }
 
     var leftSide = (
+      <div style={style.clueboytoken}>
         <FontIcon className="material-icons" style={{...iconStyles, ...style.clueboyicon}}>stars</FontIcon>
+      </div>
     );
 
     var centerText;
     if (!this.props.currentClue) {
       centerText = 'No clue yet';
     } else {
-      centerText = '"' + this.props.currentClue + '"';
+      let rawGuesses = parseInt(this.props.guessesRemaining) - 1;
+      centerText = '"' + this.props.currentClue + '" (' + rawGuesses + ')';
     }
     var centerComponent = (
       <div style={style.clueboytext}>{centerText}</div>
     );
-    if (this.props.isClueboy && this.props.selectedTeam === this.props.team && !this.props.clueSubmitted) {
+    if (this.props.isClueboy && this.props.selectedTeam === this.props.team && !this.props.clueSubmitted && this.props.team === this.props.teamTurn) {
     //if (!this.props.clueSubmitted) {
       centerComponent = (
         <div style={style.clueboyclueentry}>
           <form onSubmit={this.handleClueSubmit}>
           <TextField
+            onKeyPress = { (e) => {
+              if (e.key === 'Enter') {
+                this.handleClueSubmit();
+              }
+            }}
             hintText="clue"
             hintStyle={style.cluetexthint}
             underlineFocusStyle={style.cluetextunderline}
@@ -124,7 +134,12 @@ class ClueBoy extends Component {
             maxLength={15}
           />
           <TextField
-            hintText="words"
+            onKeyPress = { (e) => {
+              if (e.key === 'Enter') {
+                this.handleClueSubmit();
+              }
+            }}
+            hintText="words(#)"
             hintStyle={style.cluetexthint}
             underlineFocusStyle={style.cluetextunderline}
             inputStyle={style.cluetexthint}
@@ -177,7 +192,7 @@ class ClueBoy extends Component {
       <CardTitle title={clueboyState} style={style.clueboyinfo}/>
     );
 
-    console.log("number input", this.state.clueinput);
+    //console.log("number input", this.state.clueinput);
     return (
       <MuiThemeProvider>
 

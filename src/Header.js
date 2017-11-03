@@ -29,6 +29,7 @@ class Header extends Component {
     this.handleSelectTeamOpen = this.handleSelectTeamOpen.bind(this);
     this.handleSelectTeamClose = this.handleSelectTeamClose.bind(this);
     this.handleTeamSelect = this.handleTeamSelect.bind(this);
+    this.handleSkipClicked = this.handleSkipClicked.bind(this);
   }
   handleCreateRoom(e) {
     this.props.onCreateRoomClicked();
@@ -41,7 +42,7 @@ class Header extends Component {
     e.preventDefault();
     this.setState({tokenfield: '', submitted: true});
     //this.props.onTokenSubmit(this.state.tokenfield);
-    this.props.onTokenSubmit('59faf940f9dd6991dd9ca4af');
+    this.props.onTokenSubmit('59fbf3cf3daaf2ba5db7d8b2');
 
   }
   handleSelectTeamOpen(e) {
@@ -64,6 +65,10 @@ class Header extends Component {
       });
 
   }
+  handleSkipClicked(e) {
+    e.preventDefault();
+    this.props.onSkipClicked();
+  }
   componentDidMount() {
     // console.log('header cards', this.props.cards);
     // console.log('params', this.props.params);
@@ -75,12 +80,34 @@ class Header extends Component {
     // }
   }
   render() {
+    var currentClueboySubmitted = "Guessboys" + " (" + 
+    (this.props.teamTurn === 'red' ? this.props.redboyGuesses : this.props.blueboyGuesses)
+    + " guesses remaining)";
+    if (this.props.teamTurn === 'blue') {
+      if (!this.props.blueboyClueSubmitted) {
+        currentClueboySubmitted = "Clueboy";
+      }
+    } else {
+      if (!this.props.redboyClueSubmitted) {
+        currentClueboySubmitted = "Clueboy";
+      }
+    }
+    var currentTurnText = "Waiting on: " + this.props.teamTurn + " team " + currentClueboySubmitted;
+    var showSkipButton = false;
+    if (this.props.teamTurn === this.props.selectedTeam) {
+      showSkipButton = true;
+    }
     var gameinterface = (
       <div style={style.gameinterface}>
-        <FlatButton label={this.props.roomid ? this.props.roomid : "Loading..."} style={style.headerbuttontext} disabled={true}/>
+        <span>{this.props.roomid}</span>
         <FlatButton label="COPY ROOM ID" style={style.headerbuttonflat} />
-        <FlatButton label="WAITING ON: RED TEAM (3 GUESSES)" style={style.headerbuttontext} disabled={true}/>
-        <FlatButton label="END TURN EARLY" style={style.headerbuttonflatimportant} />
+        <FlatButton label={currentTurnText} style={style.headerbuttontext} disabled={true}/>
+        {!this.props.isClueboy ? 
+          <FlatButton 
+            label="END TURN EARLY" 
+            style={style.headerbuttonflatimportant} 
+            onClick={this.handleSkipClicked} 
+            disabled={!showSkipButton}/>: null}
       </div>
     );
 

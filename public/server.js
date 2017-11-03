@@ -37,9 +37,7 @@ var simpsons = ['Homer', 'Bart', 'Lisa', 'Marge', 'Abe', 'Snowball', 'Apu', 'Wig
 var australia = ['Straya', 'Grog', 'Goon', 'Oath', 'Stubby', 'Abbott', 'Kevin', 'Ute', 'Roo', 'Platypus', 'Sydney',
 'Melbourne', 'S\'truth', 'Bikkie', 'Grouse', 'Wallaby', 'Mate', 'Magpie', 'Spewwin', 'Budgie']
 
-function generate25WordArray(theme) { //returns
-
-
+function generate25WordArray(theme) {
   let possibleWords = ricknmorty.concat(australia);
 
   let wordList = [];
@@ -119,6 +117,8 @@ router.route('/clueboys/:clueboyid')
     (req.body.currentClue) ? clueboy.currentClue = req.body.currentClue : null;
     (req.body.clueSubmitted) ? clueboy.clueSubmitted = req.body.clueSubmitted : null;
     (req.body.decrease) ? clueboy.cardsRemaining = clueboy.cardsRemaining - 1 : null;
+    (req.body.decrease) ? clueboy.guessesRemaining = clueboy.guessesRemaining - 1 : null;    
+    (req.body.guessesRemaining) ? clueboy.guessesRemaining = req.body.guessesRemaining : null;
     clueboy.save(function(err) {
       if (err)
         res.send(err);
@@ -229,6 +229,7 @@ router.route('/room')
       pastClues: [],
       clueSubmitted: false,
       cardsRemaining: cbrl,
+      guessesRemaining: 0,
     });
     redClueboy.save(function (err) {
       if (err)
@@ -243,6 +244,7 @@ router.route('/room')
       pastClues: [],
       clueSubmitted: false,
       cardsRemaining: cbbl,
+      guessesRemaining: 0,      
     });
     bluesCluesboy.save(function (err) {
       if (err)

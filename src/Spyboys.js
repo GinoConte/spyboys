@@ -45,6 +45,7 @@ class Spyboys extends Component {
     this.fetchClueboysFromServer = this.fetchClueboysFromServer.bind(this);
     this.handlePickedATeam = this.handlePickedATeam.bind(this);
     this.handleClueSubmit = this.handleClueSubmit.bind(this);
+    this.handleSkipClicked = this.handleSkipClicked.bind(this);
   }
   fetchCardsFromServer() {
     console.log("fetching for " + this.state.roomid);
@@ -96,44 +97,59 @@ class Spyboys extends Component {
     }
   }
   advanceBoard(cardid, roomid, cardcolour) {
-    //(1)update card and change state to revealed
-    let body = {
-      state : 'revealed',
-    }
-    axios.put('http://localhost:3001/api/cards/'+ cardid, body)
-      .catch(err => {
-        console.log(err);
-    });
 
-    //(2)check if revealed card is an assassin
-    if (cardcolour === 'black') {
-      this.setState({gameover: true});
-      //game over, change state to true and render small gameover alert
-    } else { //(3)handle other card types, decrement score counter
-      if (cardcolour === 'blue') {
-        body = {
-          decrease: true,
+    let body = {};
+    let hitIncorrectColour = false;
+    
+    if (cardid && cardcolour) {
+      //(1)update card and change state to revealed
+      body = {
+        state : 'revealed',
+      }
+      axios.put('http://localhost:3001/api/cards/'+ cardid, body)
+        .catch(err => {
+          console.log(err);
+      });
+
+      //(2)check if revealed card is an assassin
+      if (cardcolour === 'black') {
+        hitIncorrectColour = true;
+        this.setState({gameover: true});
+        //game over, change state to true and render small gameover alert
+      } else { //(3)handle other card types, decrement score counter
+        if (cardcolour === 'blue') {
+          if (this.state.selectedTeam === 'red') {
+            hitIncorrectColour = true;
+          }
+          body = {
+            decrease: true,
+          }
+          let blueboyid = this.state.blueboy._id;
+          axios.put('http://localhost:3001/api/clueboys/'+ blueboyid, body)
+          .then(res => {
+            this.fetchClueboysFromServer();
+          })
+            .catch(err => {
+              console.log(err);
+          });
+        } else if (cardcolour === 'red') {
+          if (this.state.selectedTeam === 'blue') {
+            hitIncorrectColour = true;
+          };
+          body = {
+            decrease: true,
+          }
+          let redboyid = this.state.redboy._id;
+          axios.put('http://localhost:3001/api/clueboys/'+ redboyid, body)
+          .then(res => {
+            this.fetchClueboysFromServer();
+          })
+            .catch(err => {
+              console.log(err);
+          });
+        } else if (cardcolour === 'green') {
+          hitIncorrectColour = true;
         }
-        let blueboyid = this.state.blueboy._id;
-        axios.put('http://localhost:3001/api/clueboys/'+ blueboyid, body)
-        .then(res => {
-          this.fetchClueboysFromServer();
-        })
-          .catch(err => {
-            console.log(err);
-        });
-      } else if (cardcolour === 'red') {
-        body = {
-          decrease: true,
-        }
-        let redboyid = this.state.redboy._id;
-        axios.put('http://localhost:3001/api/clueboys/'+ redboyid, body)
-        .then(res => {
-          this.fetchClueboysFromServer();
-        })
-          .catch(err => {
-            console.log(err);
-        });
       }
     }
 
@@ -159,20 +175,39 @@ class Spyboys extends Component {
 
 
     //(6) change the current turn -----------
-    let nextTeamTurn = 'blue';
-    if (this.state.teamTurn === 'blue') {
-      nextTeamTurn = 'red';
+    //if guessesremaining == 0 or hit incorrect colour or skipped
+    let guesses = this.state.redboy.guessesRemaining;
+    if (this.state.selectedTeam === 'blue') {
+      guesses = this.state.blueboy.guessesRemaining;
     }
-    this.setState({teamTurn: nextTeamTurn});
-
-    body = {
-      teamTurn: nextTeamTurn,
+    if (hitIncorrectColour || guesses == 0) {
+      //advance turn
+      let nextTeamTurn = 'blue';
+      if (this.state.teamTurn === 'blue') {
+        nextTeamTurn = 'red';
+      }
+      this.setState({teamTurn: nextTeamTurn});
+  
+      body = {
+        teamTurn: nextTeamTurn,
+      }
+      axios.put('http://localhost:3001/api/room/'+ roomid, body)
+        .catch(err => {
+          console.log(err);
+      });
+      //also reset guesses remaining
+      body = {
+        guessesRemaining: 0,
+      }
+      axios.put('http://localhost:3001/api/clueboys/'+ clueboyid, body)
+      .then(res => {
+        this.fetchClueboysFromServer();
+      })
+        .catch(err => {
+          console.log(err);
+      });
     }
 
-    axios.put('http://localhost:3001/api/room/'+ roomid, body)
-      .catch(err => {
-        console.log(err);
-    });
 
 
   }
@@ -213,9 +248,11 @@ class Spyboys extends Component {
     }
     this.setState({selectedTeam: team, isClueboy: pickedclueboy});
   }
-  handleClueSubmit(clueboyid, clue) {
+  handleClueSubmit(clueboyid, clue, guesses) {
+    let guessesRemaining = parseInt(guesses) + 1;
     let body = {
       currentClue : clue,
+      guessesRemaining : guessesRemaining,
       clueSubmitted: true,
     }
     axios.put('http://localhost:3001/api/clueboys/'+ clueboyid, body)
@@ -226,14 +263,22 @@ class Spyboys extends Component {
           console.log(err);
     });
   }
+  handleSkipClicked() {
+    this.setState({skipclicked:true},
+      function() {
+        this.advanceBoard(null, this.state.roomid, null);
+      });
+  }
   handleGameoverClose() {
     this.setState({gameover: false})
   }
   componentDidMount() {
     this.fetchCardsFromServer();
 
-    setInterval(this.fetchCardsFromServer(), 1000);
-
+    // setInterval(this.fetchCardsFromServer, 2000);
+    // setInterval(this.fetchClueboysFromServer, 2000);
+    // setInterval(this.fetchWhosTurn, 2000);
+    
   }
   render() {
 
@@ -289,11 +334,17 @@ class Spyboys extends Component {
             onCreateRoomClicked={this.handleCreateRoomClicked}
             onTokenSubmit={this.handleTokenSubmit}
             onSelectTeam={this.handlePickedATeam}
+            onSkipClicked={this.handleSkipClicked}
             roomid={this.state.roomid}
             loadFromURL={false}
             cards={this.state.cards}
             selectedTeam={this.state.selectedTeam}
             isClueboy={this.state.isClueboy}
+            teamTurn={this.state.teamTurn}
+            redboyGuesses={this.state.redboy.guessesRemaining}
+            blueboyGuesses={this.state.blueboy.guessesRemaining}
+            redboyClueSubmitted={this.state.redboy.clueSubmitted}
+            blueboyClueSubmitted={this.state.blueboy.clueSubmitted}
             />
           {(this.state.roomid) ?
             (<center><div style={style.clueboyholder}>
@@ -302,6 +353,7 @@ class Spyboys extends Component {
                 teamTurn={this.state.teamTurn}
                 id={this.state.blueboy._id}
                 cardsRemaining={this.state.blueboy.cardsRemaining}
+                guessesRemaining={this.state.blueboy.guessesRemaining}
                 currentClue={this.state.blueboy.currentClue}
                 pastClues={this.state.blueboy.pastclues}
                 selectedTeam={this.state.selectedTeam}
@@ -314,6 +366,7 @@ class Spyboys extends Component {
                 teamTurn={this.state.teamTurn}
                 id={this.state.redboy._id}
                 cardsRemaining={this.state.redboy.cardsRemaining}
+                guessesRemaining={this.state.redboy.guessesRemaining}
                 currentClue={this.state.redboy.currentClue}
                 pastClues={this.state.redboy.pastclues}
                 selectedTeam={this.state.selectedTeam}

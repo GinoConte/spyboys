@@ -43,14 +43,14 @@ const style = {
   },
   clueboytextentry: {
     width: '130px',
-    height: '45px',
+    height: '42px',
     display: 'inline-block',
     marginRight: '10px',
     paddingTop: '10px',    
   },
   clueboynumberentry: {
     width: '50px',
-    height: '45px',
+    height: '42px',
     //display: 'inline-block',
     paddingTop: '10px',    
   },
@@ -97,9 +97,17 @@ const style = {
     //backgroundColor: '#555',
 
   },
-  clueboyinfo: {
+  clueboytoken: {
     display: 'inline-block',
-    marginTop: '-5px',
+    width: '100px',
+    //backgroundColor: '#333',
+  },
+  clueboyinfo: {
+    width: '150px',
+    display: 'inline-block',
+    marginTop: '-10px',
+    //backgroundColor: '#333',
+    
   },
   clueboystate: {
     display: 'inline-block',
