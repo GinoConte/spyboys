@@ -42,7 +42,7 @@ class Header extends Component {
     e.preventDefault();
     this.setState({tokenfield: '', submitted: true});
     //this.props.onTokenSubmit(this.state.tokenfield);
-    this.props.onTokenSubmit('59fbf3cf3daaf2ba5db7d8b2');
+    this.props.onTokenSubmit('59fc39736937299e714dc5ed');
 
   }
   handleSelectTeamOpen(e) {
@@ -80,7 +80,7 @@ class Header extends Component {
     // }
   }
   render() {
-    var currentClueboySubmitted = "Guessboys" + " (" + 
+    var currentClueboySubmitted = "Guessboys" + " (" +
     (this.props.teamTurn === 'red' ? this.props.redboyGuesses : this.props.blueboyGuesses)
     + " guesses remaining)";
     if (this.props.teamTurn === 'blue') {
@@ -97,16 +97,18 @@ class Header extends Component {
     if (this.props.teamTurn === this.props.selectedTeam) {
       showSkipButton = true;
     }
+
+    // <span>{this.props.roomid}</span>
+    // <FlatButton label="COPY ROOM ID" style={style.headerbuttonflat} />
+
     var gameinterface = (
       <div style={style.gameinterface}>
-        <span>{this.props.roomid}</span>
-        <FlatButton label="COPY ROOM ID" style={style.headerbuttonflat} />
-        <FlatButton label={currentTurnText} style={style.headerbuttontext} disabled={true}/>
-        {!this.props.isClueboy ? 
-          <FlatButton 
-            label="END TURN EARLY" 
-            style={style.headerbuttonflatimportant} 
-            onClick={this.handleSkipClicked} 
+        <FlatButton label={currentTurnText} style={style.headerbuttonflat} disabled={true}/>
+        {!this.props.isClueboy ?
+          <FlatButton
+            label="END TURN EARLY"
+            style={style.headerbuttonflatimportant}
+            onClick={this.handleSkipClicked}
             disabled={!showSkipButton}/>: null}
       </div>
     );
@@ -156,7 +158,7 @@ class Header extends Component {
     //check and change team colour
     var teamColour = {};
     if (this.props.selectedTeam) {
-      if (this.props.selectedTeam == 'red') {
+      if (this.props.selectedTeam === 'red') {
         teamColour.backgroundColor = '#F44336';
         if (this.props.isClueboy) {
           teamColour.backgroundColor = '#B71C1C';

@@ -117,8 +117,9 @@ router.route('/clueboys/:clueboyid')
     (req.body.currentClue) ? clueboy.currentClue = req.body.currentClue : null;
     (req.body.clueSubmitted) ? clueboy.clueSubmitted = req.body.clueSubmitted : null;
     (req.body.decrease) ? clueboy.cardsRemaining = clueboy.cardsRemaining - 1 : null;
-    (req.body.decrease) ? clueboy.guessesRemaining = clueboy.guessesRemaining - 1 : null;    
+    (req.body.decrease) ? clueboy.guessesRemaining = clueboy.guessesRemaining - 1 : null;
     (req.body.guessesRemaining) ? clueboy.guessesRemaining = req.body.guessesRemaining : null;
+    (req.body.currentGuessNumber) ? clueboy.currentGuessNumber = req.body.currentGuessNumber : null;
     clueboy.save(function(err) {
       if (err)
         res.send(err);
@@ -230,6 +231,7 @@ router.route('/room')
       clueSubmitted: false,
       cardsRemaining: cbrl,
       guessesRemaining: 0,
+      currentGuessNumber: 0,
     });
     redClueboy.save(function (err) {
       if (err)
@@ -244,7 +246,8 @@ router.route('/room')
       pastClues: [],
       clueSubmitted: false,
       cardsRemaining: cbbl,
-      guessesRemaining: 0,      
+      guessesRemaining: 0,
+      currentGuessNumber: 0,
     });
     bluesCluesboy.save(function (err) {
       if (err)

@@ -57,7 +57,7 @@ class Card extends Component {
 
     var cardColour;
     //assign colour based on state
-    if (this.state.state === "none" && !this.props.isClueboy) {
+    if (this.props.state === "none" && !this.props.isClueboy) {
       cardColour = '#FFF59D';
     } else {
       cardColour = '#ffa09b';

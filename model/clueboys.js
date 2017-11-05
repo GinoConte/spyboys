@@ -13,6 +13,7 @@ var ClueboysSchema = new Schema({
   _parentRoom: Schema.Types.ObjectId,
   team: String,
   currentClue: String,
+  currentGuessNumber: Number,
   guessesRemaining: Number,
   pastClues: [String],
   clueSubmitted: Boolean,

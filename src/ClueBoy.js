@@ -107,8 +107,7 @@ class ClueBoy extends Component {
     if (!this.props.currentClue) {
       centerText = 'No clue yet';
     } else {
-      let rawGuesses = parseInt(this.props.guessesRemaining) - 1;
-      centerText = '"' + this.props.currentClue + '" (' + rawGuesses + ')';
+      centerText = '"' + this.props.currentClue + '" (' + this.props.currentGuessNumber + ')';
     }
     var centerComponent = (
       <div style={style.clueboytext}>{centerText}</div>

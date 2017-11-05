@@ -57,6 +57,7 @@ class Spyboys extends Component {
           this.setState({ cards: res.data, isFetchingCards: true },
             function() {
               //console.log(this.state.cards);
+              this.fetchClueboysFromServer();
               this.setState({isFetchingCards : false});
               //this.generateSpyBoard();
             });
@@ -90,6 +91,7 @@ class Spyboys extends Component {
                 blueboy = this.state.clueboys[0];
               }
               this.setState({redboy:redboy, blueboy:blueboy, isFetchingCards:false});
+              this.fetchWhosTurn();
             });
         })
     } else {
@@ -100,7 +102,7 @@ class Spyboys extends Component {
 
     let body = {};
     let hitIncorrectColour = false;
-    
+
     if (cardid && cardcolour) {
       //(1)update card and change state to revealed
       body = {
@@ -180,14 +182,14 @@ class Spyboys extends Component {
     if (this.state.selectedTeam === 'blue') {
       guesses = this.state.blueboy.guessesRemaining;
     }
-    if (hitIncorrectColour || guesses == 0) {
+    if (hitIncorrectColour || guesses == 0 || this.state.skipclicked) {
       //advance turn
       let nextTeamTurn = 'blue';
       if (this.state.teamTurn === 'blue') {
         nextTeamTurn = 'red';
       }
-      this.setState({teamTurn: nextTeamTurn});
-  
+      this.setState({teamTurn: nextTeamTurn, skipclicked: false});
+
       body = {
         teamTurn: nextTeamTurn,
       }
@@ -231,8 +233,8 @@ class Spyboys extends Component {
     this.setState({roomid:token},
           function() {
             this.fetchCardsFromServer();
-            this.fetchWhosTurn();
-            this.fetchClueboysFromServer();
+            //this.fetchWhosTurn();
+            //this.fetchClueboysFromServer();
           });
 
     console.log(token);
@@ -253,6 +255,7 @@ class Spyboys extends Component {
     let body = {
       currentClue : clue,
       guessesRemaining : guessesRemaining,
+      currentGuessNumber : guesses,
       clueSubmitted: true,
     }
     axios.put('http://localhost:3001/api/clueboys/'+ clueboyid, body)
@@ -275,10 +278,10 @@ class Spyboys extends Component {
   componentDidMount() {
     this.fetchCardsFromServer();
 
-    // setInterval(this.fetchCardsFromServer, 2000);
-    // setInterval(this.fetchClueboysFromServer, 2000);
-    // setInterval(this.fetchWhosTurn, 2000);
-    
+    setInterval(this.fetchCardsFromServer, 2000);
+    //setInterval(this.fetchClueboysFromServer, 2000);
+    //setInterval(this.fetchWhosTurn, 2000);
+
   }
   render() {
 
@@ -321,7 +324,8 @@ class Spyboys extends Component {
     //   </div>
     // );
 
-    if (this.state.isFetchingCards) {
+    //if (this.state.isFetchingCards) {
+    if (false) {
       return(
         <MuiThemeProvider>
           <LinearProgress mode="indeterminate" />
@@ -355,6 +359,7 @@ class Spyboys extends Component {
                 cardsRemaining={this.state.blueboy.cardsRemaining}
                 guessesRemaining={this.state.blueboy.guessesRemaining}
                 currentClue={this.state.blueboy.currentClue}
+                currentGuessNumber={this.state.blueboy.currentGuessNumber}
                 pastClues={this.state.blueboy.pastclues}
                 selectedTeam={this.state.selectedTeam}
                 isClueboy={this.state.isClueboy}
@@ -368,6 +373,7 @@ class Spyboys extends Component {
                 cardsRemaining={this.state.redboy.cardsRemaining}
                 guessesRemaining={this.state.redboy.guessesRemaining}
                 currentClue={this.state.redboy.currentClue}
+                currentGuessNumber={this.state.redboy.currentGuessNumber}
                 pastClues={this.state.redboy.pastclues}
                 selectedTeam={this.state.selectedTeam}
                 isClueboy={this.state.isClueboy}
