@@ -13,6 +13,11 @@ import Popover from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import IconMenu from 'material-ui/IconMenu';
+import FontIcon from 'material-ui/FontIcon';
+import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
+
 class Header extends Component {
   constructor(props) {
     super(props);
@@ -179,6 +184,28 @@ class Header extends Component {
           style={{...style.navbar, ...teamColour}}
           >
         </AppBar>
+        <Toolbar>
+          <ToolbarGroup firstChild={true}>
+            <h1>Clueboys & Guessboys</h1>
+          </ToolbarGroup>
+          <ToolbarGroup>
+            <ToolbarTitle text="Options" />
+            <FontIcon className="muidocs-icon-custom-sort" />
+            <ToolbarSeparator />
+            <RaisedButton label="END TURN" primary={true} />
+            <RaisedButton label="CHANGE TEAM" primary={true} />
+            <IconMenu
+              iconButtonElement={
+                <IconButton touch={true}>
+                  <NavigationExpandMoreIcon />
+                </IconButton>
+              }
+            >
+              <MenuItem primaryText="Download" />
+              <MenuItem primaryText="More Info" />
+            </IconMenu>
+          </ToolbarGroup>
+        </Toolbar>
       </MuiThemeProvider>
     );
   }

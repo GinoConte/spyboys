@@ -35,7 +35,15 @@ var simpsons = ['Homer', 'Bart', 'Lisa', 'Marge', 'Abe', 'Snowball', 'Apu', 'Wig
 'Duff', 'Tavern', 'Bonestorm', 'Milhouse', 'Treehouse', 'Shorts', 'D\'oh', 'Krusty']
 
 var australia = ['Straya', 'Grog', 'Goon', 'Oath', 'Stubby', 'Abbott', 'Kevin', 'Ute', 'Roo', 'Platypus', 'Sydney',
-'Melbourne', 'S\'truth', 'Bikkie', 'Grouse', 'Wallaby', 'Mate', 'Magpie', 'Spewwin', 'Budgie']
+'Melbourne', 'S\'truth', 'Grouse', 'Wallaby', 'Mate', 'Magpie', 'Spewwin', 'Budgie']
+
+var food = ['Bagel', 'Doughnut', 'Cake', 'Cream', 'Milk', 'Cheese', 'Bread', 'Scotch', 'Jack', 'Coffee', 'Pasta',
+            'Pizza', 'Potato', 'Steak', 'Pig']
+
+var concepts = ['B Emoji', 'Sad', 'Rude', 'Prime', 'Help']
+
+var bigguy = ['4 U', 'I\'m CIA']
+
 
 function generate25WordArray(theme) {
   let possibleWords = ricknmorty.concat(australia);
@@ -181,9 +189,9 @@ router.route('/room')
 
       currCard.word = words[i];
       if (australia.includes(currCard.word)) {
-        currCard.theme = 'Straya';
+        currCard.theme = 'Australia';
       } else {
-        currCard.theme = 'Rocko and Mortimer';
+        currCard.theme = 'Rick and Morty';
       }
 
 
